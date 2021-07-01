@@ -2,9 +2,14 @@
 Functions to get download data from pypi
 """
 import subprocess
+from datetime import datetime
 from pypinfo.cli import pypinfo
 
 def get_existing_data(packagename, data_path = 'libraries/pypi-downloads/'):
+    """
+    Looks for text files in data_path that match the package name 
+    and returns the data in them
+    """
     filename = str(data_path + packagename + '.downloads')
     months = []
     downloads = []
@@ -20,6 +25,41 @@ def get_existing_data(packagename, data_path = 'libraries/pypi-downloads/'):
     return months, downloads
 
 
+def get_missing_months(start_month, existing_months):
+    """
+    Starts from start_month and looks for any months up to the current month -1 
+    that are not in the data and returns a list of missing months
+    """
+    month = int(start_month[-2:])
+    year = int(start_month[:4])
+
+    current_date = datetime.today()
+    current_month = current_date.month
+    current_year = int(current_date.year)
+    
+    print ("it's ", current_year, " " , current_month)
+    missing_months = []
+    year_month_format = '{year:4d}-{month:02d}'
+    while year <= current_year:
+        end_month = 12
+        if year == current_year:
+            end_month = current_month - 1
+        while month <= end_month:
+            year_month = year_month_format.format(year = year, month = month)
+            if year_month not in existing_months:
+                missing_months.append(year_month)
+            month += 1
+        month = 1
+        year += 1
+
+    return missing_months
+
+
+
+    
+
+
+
 def query_new_data(packagename, month, include_mirrors = False):
     subprocess.run(['pypinfo', '--auth', 'snappy-downloads-3d3fb7e245fd.json']) 
     download = subprocess.run(['pypinfo', '--month', month, packagename], capture_output=True).stdout
@@ -30,3 +70,6 @@ if __name__ == '__main__':
 
     for i, month in enumerate(months):
         print('month: ', month, ' Downloads: ' , downloads[i])
+
+    missing_months = get_missing_months('2019-01', months)
+    print("You're missing ", missing_months)
