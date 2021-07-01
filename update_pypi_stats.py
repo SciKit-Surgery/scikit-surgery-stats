@@ -46,7 +46,6 @@ def get_release_information(package_dictionary):
     number_of_releases = len(releases_list)
 
     for release in releases_list:
-        print(release, end = " ")
         release_date_string = releases.get(release)[0].get('upload_time')
         release_date = datetime.fromisoformat(release_date_string)
         if first_release_date is None:
@@ -60,11 +59,11 @@ def get_release_information(package_dictionary):
             last_release_date = release_date
             last_release_name = release
 
-
-        #release_date = datetime.strptime(release_date_string, 'iso')
-        print(release_date)
     return number_of_releases, first_release_date, last_release_date,\
                    last_release_name
+
+
+
 
 def get_json_from_pypi(package):
     """
@@ -90,7 +89,8 @@ if __name__ == '__main__':
 
     for dictionary in package_dictionaries:
         print("getting releases for ", dictionary.get('info').get('name'))
-        print(get_release_information(dictionary))
+        number_of_releases, first_release_date, last_release_date,\
+                   last_release_name = get_release_information(dictionary))
 
 
    
