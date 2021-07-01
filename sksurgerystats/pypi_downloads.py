@@ -37,7 +37,6 @@ def get_missing_months(start_month, existing_months):
     current_month = current_date.month
     current_year = int(current_date.year)
     
-    print ("it's ", current_year, " " , current_month)
     missing_months = []
     year_month_format = '{year:4d}-{month:02d}'
     while year <= current_year:
@@ -55,14 +54,10 @@ def get_missing_months(start_month, existing_months):
     return missing_months
 
 
-
-    
-
-
-
 def query_new_data(packagename, month, include_mirrors = False):
     subprocess.run(['pypinfo', '--auth', 'snappy-downloads-3d3fb7e245fd.json']) 
     download = subprocess.run(['pypinfo', '--month', month, packagename], capture_output=True).stdout
+    return download.decode('utf-8')
 
 
 if __name__ == '__main__':
@@ -72,4 +67,11 @@ if __name__ == '__main__':
         print('month: ', month, ' Downloads: ' , downloads[i])
 
     missing_months = get_missing_months('2019-01', months)
-    print("You're missing ", missing_months)
+    print("querying ", missing_months[0])
+    new_data = query_new_data('ndicapi', missing_months[0])
+    new_data_by_line = new_data.splitlines()
+   
+    downloads = int(new_data_by_line[7].replace('|', '').replace(' ', ''))
+    print("Downloads = ", downloads)
+    for i, line in enumerate(new_data_by_line):
+        print(i, " of " , len(new_data_by_line), ":", line)
