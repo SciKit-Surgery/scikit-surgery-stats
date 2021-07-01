@@ -3,6 +3,7 @@ Searches for packages on pypi with SciKit-Surgery in the name, then
 gets some statistics for them
 """
 
+import urllib.request
 import subprocess
 import json
 
@@ -28,14 +29,35 @@ def init_packages(packages, path = 'libraries/'):
         try:
             with open (filename, 'r') as read_file:
                 package_data = json.load(read_file)
-                print("got " , package_data)
 
         except(FileNotFoundError):
             with open (filename, 'w') as write_file:
                 json.dump({ 'name' : package }, write_file)
 
+def get_releases(packages):
+    """
+    Queries PyPi to get releases for each package
+    """
+    for package in packages:
+        print("getting releases for ", package)
+        url = str('https://pypi.org/pypi/' + package + '/json')
+        request = urllib.request.Request(url)
+        response = urllib.request.urlopen(request)
+        data = response.read()
+        values = json.loads(data)
+        releases = values.get('releases')
+        releases_list = list(values.get('releases'))
+        print(str(next(iter(releases))))
+        for release in releases_list:
+            print(release, end = " ")
+            release_date = releases.get(release)[0].get('upload_time')
+            print(release_date)
+            #print (values.get('releases'))
+
+
 if __name__ == '__main__':
     packages = find_new_pypi_packages('scikit-surgery')
     init_packages(packages)
+    get_releases(packages)
 
    
