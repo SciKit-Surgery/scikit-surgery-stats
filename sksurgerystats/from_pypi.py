@@ -51,7 +51,8 @@ def get_release_information(package_dictionary):
             last_release_date = release_date
             last_release_name = release
 
-    return number_of_releases, first_release_date, last_release_date,\
+    return number_of_releases, first_release_date.isoformat(), \
+                   last_release_date.isoformat(), \
                    last_release_name
 
 

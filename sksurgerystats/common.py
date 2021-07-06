@@ -44,8 +44,23 @@ def update_package_information(package, key, entry,
     else:
         if overwrite:
             configuration[key] = entry
-
+    
     with open(filename, 'w') as fileout:
         configuration = json.dump(configuration, fileout)
     
+def get_package_information(package, key, path='libraries/'):
+    """
+    returns a key value for a given package, returns None
+    if key not present
+    """
+    filename = str('libraries/' + package)
+    configuration = None
+    with open(filename, 'r') as filein:
+        try:
+            configuration = json.load(filein)
+        except json.JSONDecodeError:
+            configuration = {}
+
+    return configuration.get(key, None)
+
 

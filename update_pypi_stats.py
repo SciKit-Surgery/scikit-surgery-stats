@@ -9,7 +9,9 @@ import subprocess
 import json
 from datetime import datetime
 import sksurgerystats.from_pypi as skspypi
-from sksurgerystats.common import add_packages, update_package_information
+from sksurgerystats.from_github import get_github_stats
+from sksurgerystats.common import add_packages, update_package_information, \
+        get_package_information
 
 if __name__ == '__main__':
     all_packages = os.listdir('libraries/')
@@ -24,16 +26,34 @@ if __name__ == '__main__':
 
     for dictionary in package_dictionaries:
         package_name = dictionary.get('info').get('name')
-        print("getting releases for ", package_name)
         number_of_releases, first_release_date, last_release_date,\
                    last_release_name = \
                    skspypi.get_release_information(dictionary)
-        print(number_of_releases, first_release_date, last_release_date,\
-                   last_release_name)
 
         update_package_information(package_name, 'Number of Releases', 
                 number_of_releases, 
                 overwrite = True)
+        
+        update_package_information(package_name, 'First Release Date', 
+                first_release_date, 
+                overwrite = True)
+        
+        update_package_information(package_name, 'Last Release Date', 
+                last_release_date, 
+                overwrite = True)
+        
+        update_package_information(package_name, 'Last Release Name', 
+                last_release_name, 
+                overwrite = True)
+    
+        homepage = get_package_information(package_name, 'home_page')
+        homepage = dictionary.get('info').get('home_page', homepage)
+        print ("Got homepage", homepage)
+        if homepage is not None:
+            print(homepage)
+            get_github_stats(homepage)
+                 
+
 
 
    
