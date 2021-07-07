@@ -2,7 +2,7 @@
 Searches for packages on pypi with SciKit-Surgery in the name, then 
 gets some statistics for them
 """
-
+import requests
 import os.path
 import urllib 
 import subprocess
@@ -84,10 +84,8 @@ if __name__ == '__main__':
         #check and update ci
         if ci_badge is not None:
             req = urllib.request.Request(ci_badge)
-            found_page = False
             try:
                 urllib.request.urlopen(req)
-                found_page = True
                 update_package_information(package, 'ci_badge', ci_badge,
                         overwrite = True)
             except urllib.error.HTTPError:
@@ -95,10 +93,8 @@ if __name__ == '__main__':
         
         if ci_target is not None:
             req = urllib.request.Request(ci_target)
-            found_page = False
             try:
                 urllib.request.urlopen(req)
-                found_page = True
                 update_package_information(package, 'ci_target', ci_target,
                         overwrite = True)
             except urllib.error.HTTPError:
@@ -108,10 +104,8 @@ if __name__ == '__main__':
         #cheek and update coverage
         if coverage_badge is not None:
             req = urllib.request.Request(coverage_badge)
-            found_page = False
             try:
                 urllib.request.urlopen(req)
-                found_page = True
                 update_package_information(package, 'coverage_badge', coverage_badge,
                         overwrite = True)
             except urllib.error.HTTPError:
@@ -119,10 +113,8 @@ if __name__ == '__main__':
         
         if coverage_target is not None:
             req = urllib.request.Request(coverage_target)
-            found_page = False
             try:
                 urllib.request.urlopen(req)
-                found_page = True
                 update_package_information(package, 'coverage_target', coverage_target,
                         overwrite = True)
             except urllib.error.HTTPError:
@@ -130,22 +122,16 @@ if __name__ == '__main__':
 
         #check and update docs
         if docs_badge is not None:
-            req = urllib.request.Request(docs_badge)
-            found_page = False
-            try:
-                urllib.request.urlopen(req)
-                found_page = True
-                update_package_information(package, 'docs_badge', docs_badge,
-                        overwrite = True)
-            except urllib.error.HTTPError:
-                pass
+            #read the docs gives us a nice unknown badge if no docs found 
+            #so let's not bother checking. Also the urlopen method returns
+            #403 forbiden
+            update_package_information(package, 'docs_badge', docs_badge,
+                overwrite = False)
         
         if docs_target is not None:
             req = urllib.request.Request(docs_target)
-            found_page = False
             try:
                 urllib.request.urlopen(req)
-                found_page = True
                 update_package_information(package, 'docs_target', docs_target,
                         overwrite = True)
             except urllib.error.HTTPError:
@@ -154,10 +140,8 @@ if __name__ == '__main__':
         #check and update codeclimate
         if codeclimate_badge is not None:
             req = urllib.request.Request(codeclimate_badge)
-            found_page = False
             try:
                 urllib.request.urlopen(req)
-                found_page = True
                 update_package_information(package, 'codeclimate_badge', codeclimate_badge,
                         overwrite = True)
             except urllib.error.HTTPError:
@@ -165,10 +149,8 @@ if __name__ == '__main__':
         
         if codeclimate_target is not None:
             req = urllib.request.Request(codeclimate_target)
-            found_page = False
             try:
                 urllib.request.urlopen(req)
-                found_page = True
                 update_package_information(package, 'codeclimate_target', codeclimate_target,
                         overwrite = True)
             except urllib.error.HTTPError:
@@ -176,34 +158,22 @@ if __name__ == '__main__':
 
         #check and update pepy_downloads
         if pepy_downloads_badge is not None:
-            req = urllib.request.Request(pepy_downloads_badge)
-            found_page = False
-            try:
-                urllib.request.urlopen(req)
-                found_page = True
+            req=requests.get(pepy_downloads_badge)
+            if req.status_code == 200:
                 update_package_information(package, 'pepy_downloads_badge', pepy_downloads_badge,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass
         
         if pepy_downloads_target is not None:
-            req = urllib.request.Request(pepy_downloads_target)
-            found_page = False
-            try:
-                urllib.request.urlopen(req)
-                found_page = True
+            req=requests.get(pepy_downloads_badge)
+            if req.status_code == 200:
                 update_package_information(package, 'pepy_downloads_target', pepy_downloads_target,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass
 
         #check and update syntek_package_heath
         if syntek_package_heath_badge is not None:
             req = urllib.request.Request(syntek_package_heath_badge)
-            found_page = False
             try:
                 urllib.request.urlopen(req)
-                found_page = True
                 update_package_information(package, 'syntek_package_heath_badge', syntek_package_heath_badge,
                         overwrite = True)
             except urllib.error.HTTPError:
@@ -211,10 +181,8 @@ if __name__ == '__main__':
         
         if syntek_package_heath_target is not None:
             req = urllib.request.Request(syntek_package_heath_target)
-            found_page = False
             try:
                 urllib.request.urlopen(req)
-                found_page = True
                 update_package_information(package, 'syntek_package_heath_target', syntek_package_heath_target,
                         overwrite = True)
             except urllib.error.HTTPError:

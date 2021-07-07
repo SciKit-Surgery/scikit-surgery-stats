@@ -23,7 +23,7 @@ def get_github_stats(project_name):
     except GithubException:
         return rep, stars, watchers, forks, contributors
     try:
-        contibutors = len(rep.get_stats_contributors())
+        contributors = len(rep.get_stats_contributors())
     except:
         pass
     

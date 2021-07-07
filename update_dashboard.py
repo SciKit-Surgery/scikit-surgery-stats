@@ -38,6 +38,10 @@ if __name__ == '__main__':
             
             first_release = get_package_information(package, 'First Release Date')
             last_release = get_package_information(package, 'Last Release Date')
+            stars = get_package_information(package, 'GitHub Stars')
+            forks = get_package_information(package, 'GitHub Forks')
+            watchers = get_package_information(package, 'GitHub Watchers')
+            contributors = get_package_information(package, 'GitHub Contributors')
             ci_badge = get_package_information(package, 'ci_badge')
             ci_target = get_package_information(package, 'ci_target')
             coverage_badge = get_package_information(package, 'coverage_badge')
@@ -68,21 +72,67 @@ if __name__ == '__main__':
             fileout.write('    </td>\n')
 
             fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + first_release + '</p>\n')) 
+            fileout.write(str('      <p>' + str(first_release).split('T')[0] + '</p>\n')) 
             fileout.write('    </td>\n')
 
             fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + last_release + '</p>\n')) 
+            fileout.write(str('      <p>' + str(last_release).split('T')[0] + '</p>\n')) 
             fileout.write('    </td>\n')
             
             if ci_badge is None:
-                ci_badge = "None"
+                ci_badge = "https://img.shields.io/badge/ci.yml-none-lightgrey"
             if ci_target is None:
                 ci_target = ""
             fileout.write('    <td>\n')
             fileout.write(str('      <a href="' + ci_target + '">\n')) 
             fileout.write(str('        <img src="' + ci_badge + '" alt="CI Status">\n')) 
             fileout.write(str('      </a>\n')) 
+            fileout.write('    </td>\n')
+
+            if docs_badge is None:
+                docs_badge = "https://img.shields.io/badge/docs-none-lightgrey"
+            if docs_target is None:
+                docs_target = ""
+            fileout.write('    <td>\n')
+            fileout.write(str('      <a href="' + docs_target + '">\n')) 
+            fileout.write(str('        <img src="' + docs_badge + '" alt="Docs Status">\n')) 
+            fileout.write(str('      </a>\n')) 
+            fileout.write('    </td>\n')
+            
+            if coverage_badge is None:
+                coverage_badge = "https://img.shields.io/badge/coverage-none-lightgrey"
+            if coverage_target is None:
+                coverage_target = ""
+            fileout.write('    <td>\n')
+            fileout.write(str('      <a href="' + coverage_target + '">\n')) 
+            fileout.write(str('        <img src="' + coverage_badge + '" alt="Docs Status">\n')) 
+            fileout.write(str('      </a>\n')) 
+            fileout.write('    </td>\n')
+
+            if pepy_downloads_badge is None:
+                pepy_downloads_badge = "https://img.shields.io/badge/pepy_downloads-none-lightgrey"
+            if pepy_downloads_target is None:
+                pepy_downloads_target = ""
+            fileout.write('    <td>\n')
+            fileout.write(str('      <a href="' + pepy_downloads_target + '">\n')) 
+            fileout.write(str('        <img src="' + pepy_downloads_badge + '" alt="Docs Status">\n')) 
+            fileout.write(str('      </a>\n')) 
+            fileout.write('    </td>\n')
+
+            fileout.write('    <td>\n')
+            fileout.write(str('      <p>' + str(stars) + '</p>\n')) 
+            fileout.write('    </td>\n')
+
+            fileout.write('    <td>\n')
+            fileout.write(str('      <p>' + str(forks) + '</p>\n')) 
+            fileout.write('    </td>\n')
+
+            fileout.write('    <td>\n')
+            fileout.write(str('      <p>' + str(watchers) + '</p>\n')) 
+            fileout.write('    </td>\n')
+
+            fileout.write('    <td>\n')
+            fileout.write(str('      <p>' + str(contributors) + '</p>\n')) 
             fileout.write('    </td>\n')
 
             fileout.write('  </tr>\n')
