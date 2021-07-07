@@ -55,7 +55,16 @@ if __name__ == '__main__':
             homepage = pypi_homepage
 
         if homepage is not None:
-            print(get_github_stats(homepage))
+            rep, stars, watchers, forks, contributors = get_github_stats(homepage)
+
+            update_package_information(package_name, 'GitHub Stars', 
+                    stars, overwrite = True)
+            update_package_information(package_name, 'GitHub Watchers', 
+                    watchers, overwrite = True)
+            update_package_information(package_name, 'GitHub Forks', 
+                    forks, overwrite = True)
+            update_package_information(package_name, 'GitHub Contributors', 
+                    contributors, overwrite = True)
                  
 
 
