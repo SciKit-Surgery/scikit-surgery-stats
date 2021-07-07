@@ -56,6 +56,8 @@ if __name__ == '__main__':
             syntek_package_heath_target = get_package_information(package, 'syntek_package_heath_target')
             
             homepage = get_package_information(package, 'home_page')
+            if homepage is None:
+                homepage = 'Not Found'
             
             fileout.write('  <tr>\n')
            
