@@ -44,5 +44,11 @@
       <th style="width:0.05">
         <p>Contributors</p>
       </th>
+      <th style="width:0.05">
+        <p>Package Health</p>
+      </th>
+      <th style="width:0.05">
+        <p>Maintainability</p>
+      </th>
     </tr>
   </thead>

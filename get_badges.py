@@ -77,7 +77,7 @@ if __name__ == '__main__':
                 pepy_downloads_target = str('https://pepy.tech/project' + package + '?branch=master')
 
             if syntek_package_heath_badge is None:
-                syntek_package_heath_badge = str('https://synk.io/advisor/python/' + package + '/badge.svg')
+                syntek_package_heath_badge = str('https://snyk.io/advisor/python/' + package + '/badge.svg')
             if syntek_package_heath_target is None:
                 syntek_package_heath_target = str('https://snyk.io/advisor/python/' + package)
 
@@ -171,19 +171,13 @@ if __name__ == '__main__':
 
         #check and update syntek_package_heath
         if syntek_package_heath_badge is not None:
-            req = urllib.request.Request(syntek_package_heath_badge)
-            try:
-                urllib.request.urlopen(req)
+            req=requests.get(syntek_package_heath_badge)
+            if req.status_code == 200:
                 update_package_information(package, 'syntek_package_heath_badge', syntek_package_heath_badge,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass
         
         if syntek_package_heath_target is not None:
-            req = urllib.request.Request(syntek_package_heath_target)
-            try:
-                urllib.request.urlopen(req)
+            req=requests.get(syntek_package_heath_target)
+            if req.status_code == 200:
                 update_package_information(package, 'syntek_package_heath_target', syntek_package_heath_target,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass

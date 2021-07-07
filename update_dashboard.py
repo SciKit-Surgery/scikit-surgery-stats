@@ -134,6 +134,26 @@ if __name__ == '__main__':
             fileout.write('    <td>\n')
             fileout.write(str('      <p>' + str(contributors) + '</p>\n')) 
             fileout.write('    </td>\n')
+            
+            if syntek_package_heath_badge is None:
+                syntek_package_heath_badge = "https://img.shields.io/badge/package_health-none-lightgrey"
+            if syntek_package_heath_target is None:
+                syntek_package_heath_target = ""
+            fileout.write('    <td>\n')
+            fileout.write(str('      <a href="' + syntek_package_heath_target + '">\n')) 
+            fileout.write(str('        <img src="' + syntek_package_heath_badge + '" alt="Docs Status">\n')) 
+            fileout.write(str('      </a>\n')) 
+            fileout.write('    </td>\n')
+            
+            if codeclimate_badge is None:
+                codeclimate_badge = "https://img.shields.io/badge/codeclimate-none-lightgrey"
+            if codeclimate_target is None:
+                codeclimate_target = ""
+            fileout.write('    <td>\n')
+            fileout.write(str('      <a href="' + codeclimate_target + '">\n')) 
+            fileout.write(str('        <img src="' + codeclimate_badge + '" alt="Docs Status">\n')) 
+            fileout.write(str('      </a>\n')) 
+            fileout.write('    </td>\n')
 
             fileout.write('  </tr>\n')
 
