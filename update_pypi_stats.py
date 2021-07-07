@@ -57,6 +57,8 @@ if __name__ == '__main__':
         if homepage is not None:
             rep, stars, watchers, forks, contributors = get_github_stats(homepage)
 
+            update_package_information(package_name, 'home_page', 
+                    homepage, overwrite = True)
             update_package_information(package_name, 'GitHub Stars', 
                     stars, overwrite = True)
             update_package_information(package_name, 'GitHub Watchers', 
