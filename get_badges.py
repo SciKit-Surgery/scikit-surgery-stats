@@ -26,6 +26,15 @@ if __name__ == '__main__':
             ci_target = get_package_information(package, 'ci_target')
             coverage_badge = get_package_information(package, 'coverage_badge')
             coverage_target = get_package_information(package, 'coverage_target')
+            docs_badge = get_package_information(package, 'docs_badge')
+            docs_target = get_package_information(package, 'docs_target')
+            codeclimate_badge = get_package_information(package, 'codeclimate_badge')
+            codeclimate_target = get_package_information(package, 'codeclimate_target')
+            pepy_downloads_badge = get_package_information(package, 'pepy_downloads_badge')
+            pepy_downloads_target = get_package_information(package, 'pepy_downloads_target')
+            syntek_package_heath_badge = get_package_information(package, 'syntek_package_heath_badge')
+            syntek_package_heath_target = get_package_information(package, 'syntek_package_heath_target')
+            
 
 
             homepage = get_package_information(package, 'home_page')
@@ -42,51 +51,173 @@ if __name__ == '__main__':
                     ci_badge = str(homepage + '/workflows/.github/workflows/ci.yml/badge.svg')
                 if ci_target is None:
                     ci_target = str(homepage + '/actions')
+
                 if coverage_badge is None:
                     coverage_badge = str('https://coveralls.io/repos/github/' + project_name + '/badge.svg?branch=master&service=github')
                 if coverage_target is None:
                     coverage_target = str('https://coveralls.io/github/' + project_name + '?branch=master')
+
+                if docs_badge is None:
+                    docs_badge = str('https://readthedocs.org/projects/' + package + '/badge/?version=latest')
+                if docs_target is None:
+                    docs_target = str('https://' + package + '.readthedocs.io/en/latest/?badge=latest')
                     
-            req = urllib.request.Request(ci_badge)
-            found_page = False
-            try:
-                urllib.request.urlopen(req)
-                found_page = True
-                update_package_information(package, 'ci_badge', ci_badge,
-                        overwrite = True)
-            except urllib.error.HTTPError:
-                pass
+                if codeclimate_badge is None:
+                    #doesn't seem a straight forward way here
+                    pass
+                if codeclimate_target is None:
+                    codeclimate_target = str('https://codeclimate.com/github/' + project_name)
+
+                if pepy_downloads_badge is None:
+                    pepy_downloads_badge = str('https://pepy.tech/badge/' + package)
+                if pepy_downloads_target is None:
+                    pepy_downloads_target = str('https://pepy.tech/project' + package + '?branch=master')
+
+                if syntek_package_heath_badge is None:
+                    syntek_package_heath_badge = str('https://synk.io/advisor/python/' + package + '/badge.svg')
+                if syntek_package_heath_target is None:
+                    syntek_package_heath_target = str('https://snyk.io/advisor/python/' + package)
+
+            #check and update ci
+            if ci_badge is not None:
+                req = urllib.request.Request(ci_badge)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'ci_badge', ci_badge,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
             
-            req = urllib.request.Request(ci_target)
-            found_page = False
-            try:
-                urllib.request.urlopen(req)
-                found_page = True
-                update_package_information(package, 'ci_target', ci_target,
-                        overwrite = True)
-            except urllib.error.HTTPError:
-                pass
+            if ci_target is not None:
+                req = urllib.request.Request(ci_target)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'ci_target', ci_target,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
 
 
-            req = urllib.request.Request(coverage_badge)
-            found_page = False
-            try:
-                urllib.request.urlopen(req)
-                found_page = True
-                update_package_information(package, 'coverage_badge', coverage_badge,
-                        overwrite = True)
-            except urllib.error.HTTPError:
-                pass
-          
-            req = urllib.request.Request(coverage_target)
-            found_page = False
-            try:
-                urllib.request.urlopen(req)
-                found_page = True
-                update_package_information(package, 'coverage_target', coverage_target,
-                        overwrite = True)
-            except urllib.error.HTTPError:
-                pass
+            #cheek and update coverage
+            if coverage_badge is not None:
+                req = urllib.request.Request(coverage_badge)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'coverage_badge', coverage_badge,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
+            
+            if coverage_target is not None:
+                req = urllib.request.Request(coverage_target)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'coverage_target', coverage_target,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
+
+            #check and update docs
+            if docs_badge is not None:
+                req = urllib.request.Request(docs_badge)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'docs_badge', docs_badge,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
+            
+            if docs_target is not None:
+                req = urllib.request.Request(docs_target)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'docs_target', docs_target,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
+
+            #check and update codeclimate
+            if codeclimate_badge is not None:
+                req = urllib.request.Request(codeclimate_badge)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'codeclimate_badge', codeclimate_badge,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
+            
+            if codeclimate_target is not None:
+                req = urllib.request.Request(codeclimate_target)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'codeclimate_target', codeclimate_target,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
+
+            #check and update pepy_downloads
+            if pepy_downloads_badge is not None:
+                req = urllib.request.Request(pepy_downloads_badge)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'pepy_downloads_badge', pepy_downloads_badge,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
+            
+            if pepy_downloads_target is not None:
+                req = urllib.request.Request(pepy_downloads_target)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'pepy_downloads_target', pepy_downloads_target,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
+
+            #check and update syntek_package_heath
+            if syntek_package_heath_badge is not None:
+                req = urllib.request.Request(syntek_package_heath_badge)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'syntek_package_heath_badge', syntek_package_heath_badge,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
+            
+            if syntek_package_heath_target is not None:
+                req = urllib.request.Request(syntek_package_heath_target)
+                found_page = False
+                try:
+                    urllib.request.urlopen(req)
+                    found_page = True
+                    update_package_information(package, 'syntek_package_heath_target', syntek_package_heath_target,
+                            overwrite = True)
+                except urllib.error.HTTPError:
+                    pass
+
+
 
 
 
