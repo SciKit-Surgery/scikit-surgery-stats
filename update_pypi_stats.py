@@ -17,7 +17,9 @@ if __name__ == '__main__':
     all_packages = os.listdir('libraries/')
     packages = []
     for package in all_packages:
-        if not os.path.isdir('libraries/' + package) and not package.endswith(".txt"):
+        if not os.path.isdir('libraries/' + package) and not \
+                package.endswith(".txt") and not \
+                package.startswith("."):
             packages.append(package)
     
     package_dictionaries = []
@@ -29,7 +31,7 @@ if __name__ == '__main__':
         number_of_releases, first_release_date, last_release_date,\
                    last_release_name = \
                    skspypi.get_release_information(dictionary)
-
+        
         update_package_information(package_name, 'Number of Releases', 
                 number_of_releases, 
                 overwrite = True)
@@ -47,11 +49,13 @@ if __name__ == '__main__':
                 overwrite = True)
     
         homepage = get_package_information(package_name, 'home_page')
-        homepage = dictionary.get('info').get('home_page', homepage)
-        print ("Got homepage", homepage)
+        pypi_homepage = dictionary.get('info').get('home_page', None)
+
+        if pypi_homepage is not None and pypi_homepage != "":
+            homepage = pypi_homepage
+
         if homepage is not None:
-            print(homepage)
-            get_github_stats(homepage)
+            print(get_github_stats(homepage))
                  
 
 

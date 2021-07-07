@@ -1,19 +1,34 @@
-from github import Github
+from github import Github, GithubException
 
 def get_github_stats(project_name):
     """ Get in formatation from github. project name can either be
     the github project name or the web address
     """
+    rep = "not found"
+    stars = 0 
+    watchers = 0
+    forks = 0 
+    contributors = 0
+
     split_name = project_name.split('/')
-    project_name = split_name[-2] + '/' + split_name[-1]
+    try:
+        project_name = split_name[-2] + '/' + split_name[-1]
+    except IndexError:
+        pass
+
     github = Github()
-    rep=github.get_repo(project_name)
-    print(rep, rep.description)
-    contibutors = 0 
+
+    try:
+        rep=github.get_repo(project_name)
+    except GithubException:
+        return rep, stars, watchers, forks, contributors
     try:
         contibutors = len(rep.get_stats_contributors())
     except:
         pass
+    
+    stars = rep.stargazers_count
+    watchers = rep.watchers_count
+    forks = rep.forks_count
 
-
-    print(rep, rep.stargazers_count, rep.watchers_count, rep.forks_count, contibutors)
+    return rep, stars, watchers, forks, contributors

@@ -60,7 +60,7 @@ def get_package_information(package, key, path='libraries/'):
             configuration = json.load(filein)
         except json.JSONDecodeError:
             configuration = {}
-
+    
     return configuration.get(key, None)
 
 
