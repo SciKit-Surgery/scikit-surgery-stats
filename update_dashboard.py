@@ -69,10 +69,6 @@ if __name__ == '__main__':
             fileout.write(str('      <p>' + package + '</p>\n')) 
             fileout.write('    </td>\n')
             
-            fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + 'description' + '</p>\n')) 
-            fileout.write('    </td>\n')
-            
             short_homepage = homepage
             try:
                 short_homepage = homepage.split('/')[2]

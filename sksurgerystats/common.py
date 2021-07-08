@@ -23,6 +23,19 @@ def add_packages(packages, path = 'libraries/'):
             with open(filename, 'w'):
                 pass
 
+def add_github_package(github_rep, path = 'libraries/'):
+    """
+    Searches through path directory for marker files
+    for the package, creates file if not already present
+    and writes home_page entry
+    """
+    filename = str('libraries/' + github_rep.name)
+    if not os.path.isfile(filename):
+        print("Found new package ", github_rep.full_name)
+        with open(filename, 'w') as fileout:
+            configuration = {'home_page' : github_rep.html_url}
+            json.dump(configuration, fileout)
+
 
 def update_package_information(package, key, entry, 
         overwrite = False, path='libraries/'):
