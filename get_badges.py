@@ -24,7 +24,8 @@ if __name__ == '__main__':
 
             
     for package in packages:
-
+        
+        print("Getting badges for ", package)
         ci_badge = get_package_information(package, 'ci_badge')
         ci_target = get_package_information(package, 'ci_target')
         coverage_badge = get_package_information(package, 'coverage_badge')
@@ -83,78 +84,55 @@ if __name__ == '__main__':
 
         #check and update ci
         if ci_badge is not None:
-            req = urllib.request.Request(ci_badge)
-            try:
-                urllib.request.urlopen(req)
+            req=requests.get(ci_badge)
+            if req.status_code == 200:
                 update_package_information(package, 'ci_badge', ci_badge,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass
         
         if ci_target is not None:
-            req = urllib.request.Request(ci_target)
-            try:
-                urllib.request.urlopen(req)
+            req=requests.get(ci_target)
+            if req.status_code == 200:
                 update_package_information(package, 'ci_target', ci_target,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass
-
 
         #cheek and update coverage
         if coverage_badge is not None:
-            req = urllib.request.Request(coverage_badge)
-            try:
-                urllib.request.urlopen(req)
+            req=requests.get(coverage_badge)
+            if req.status_code == 200:
                 update_package_information(package, 'coverage_badge', coverage_badge,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass
         
         if coverage_target is not None:
-            req = urllib.request.Request(coverage_target)
-            try:
-                urllib.request.urlopen(req)
+            req=requests.get(coverage_target)
+            if req.status_code == 200:
                 update_package_information(package, 'coverage_target', coverage_target,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass
 
         #check and update docs
         if docs_badge is not None:
-            #read the docs gives us a nice unknown badge if no docs found 
-            #so let's not bother checking. Also the urlopen method returns
-            #403 forbiden
-            update_package_information(package, 'docs_badge', docs_badge,
-                overwrite = False)
+            req=requests.get(docs_badge)
+            if req.status_code == 200:
+                update_package_information(package, 'docs_badge', docs_badge,
+                        overwrite = False)
         
         if docs_target is not None:
-            req = urllib.request.Request(docs_target)
-            try:
-                urllib.request.urlopen(req)
+            req=requests.get(docs_target)
+            if req.status_code == 200:
                 update_package_information(package, 'docs_target', docs_target,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass
 
         #check and update codeclimate
         if codeclimate_badge is not None:
-            req = urllib.request.Request(codeclimate_badge)
-            try:
-                urllib.request.urlopen(req)
+            req=requests.get(codeclimate_badge)
+            if req.status_code == 200:
                 update_package_information(package, 'codeclimate_badge', codeclimate_badge,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass
         
         if codeclimate_target is not None:
-            req = urllib.request.Request(codeclimate_target)
-            try:
-                urllib.request.urlopen(req)
+            req=requests.get(codeclimate_target)
+            if req.status_code == 200:
                 update_package_information(package, 'codeclimate_target', codeclimate_target,
                         overwrite = True)
-            except urllib.error.HTTPError:
-                pass
 
         #check and update pepy_downloads
         if pepy_downloads_badge is not None:
