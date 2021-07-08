@@ -90,7 +90,7 @@ if __name__ == '__main__':
             fileout.write('    </td>\n')
             
             if ci_badge is None:
-                ci_badge = "https://img.shields.io/badge/ci.yml-none-lightgrey"
+                ci_badge = "https://img.shields.io/badge/ci.yml-none-lightgrey?style=flat&logo=github"
             if ci_target is None:
                 ci_target = ""
             fileout.write('    <td>\n')
@@ -128,9 +128,19 @@ if __name__ == '__main__':
             fileout.write(str('        <img src="' + pepy_downloads_badge + '" alt="Docs Status">\n')) 
             fileout.write(str('      </a>\n')) 
             fileout.write('    </td>\n')
+           
+            github_user = get_package_information(package, 'GitHub User')
+            if github_user is not None:
+                stars_badge = str('https://img.shields.io/github/stars/' + github_user + '/' + package +
+                    '?style=social')
+            else:
+                stars_badge = str('https://img.shields.io/github/stars/notfound/' + package +
+                    '?style=social')
 
             fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + str(stars) + '</p>\n')) 
+            fileout.write(str('      <a href="' + homepage + '/stargazers">\n')) 
+            fileout.write(str('        <img src="' + stars_badge + '" alt="Github Stars">\n')) 
+            fileout.write(str('      </a>\n')) 
             fileout.write('    </td>\n')
 
             fileout.write('    <td>\n')

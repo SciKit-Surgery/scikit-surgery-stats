@@ -17,13 +17,18 @@ if __name__ == '__main__':
                 package.endswith(".txt") and not \
                 package.startswith("."):
             packages.append(package)
-    
+   
+    token = None
+    with open("github.token", "r") as token_file:
+        token = token_file.read()
+        token = token.rstrip('\n')
+
     package_dictionaries = []
     for package in packages:
         homepage = get_package_information(package, 'home_page')
 
         if homepage is not None:
-            rep, stars, watchers, forks, contributors = get_github_stats(homepage)
+            rep, stars, watchers, forks, contributors = get_github_stats(homepage, token)
 
             update_package_information(package, 'GitHub Stars', 
                     stars, overwrite = True)
@@ -33,6 +38,12 @@ if __name__ == '__main__':
                     forks, overwrite = True)
             update_package_information(package, 'GitHub Contributors', 
                     contributors, overwrite = True)
+            try:
+                update_package_information(package, 'GitHub User', 
+                        rep.organization.login, overwrite = True)
+            except:
+                pass
+
                  
 
 

@@ -1,6 +1,6 @@
 from github import Github, GithubException
 
-def get_github_stats(project_name):
+def get_github_stats(project_name, token = None):
     """ Get in formatation from github. project name can either be
     the github project name or the web address
     """
@@ -16,7 +16,7 @@ def get_github_stats(project_name):
     except IndexError:
         pass
 
-    github = Github()
+    github = Github(token)
 
     try:
         rep=github.get_repo(project_name)
