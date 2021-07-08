@@ -72,9 +72,17 @@ if __name__ == '__main__':
             fileout.write('    <td>\n')
             fileout.write(str('      <p>' + 'description' + '</p>\n')) 
             fileout.write('    </td>\n')
+            
+            short_homepage = homepage
+            try:
+                short_homepage = homepage.split('/')[2]
+            except:
+                pass
 
             fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + homepage + '</p>\n')) 
+            fileout.write(str('      <a href="' + homepage + '">\n'))
+            fileout.write(str('        ' + short_homepage + '\n')) 
+            fileout.write(str('      </a>\n')) 
             fileout.write('    </td>\n')
 
             fileout.write('    <td>\n')
