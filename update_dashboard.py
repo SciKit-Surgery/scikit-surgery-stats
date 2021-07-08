@@ -34,7 +34,7 @@ if __name__ == '__main__':
                     package.startswith("."):
                 packages.append(package)
 
-        for package in packages:
+        for count, package in enumerate(packages):
             
             first_release = get_package_information(package, 'First Release Date')
             last_release = get_package_information(package, 'Last Release Date')
@@ -61,6 +61,10 @@ if __name__ == '__main__':
             
             fileout.write('  <tr>\n')
            
+            fileout.write('    <td>\n')
+            fileout.write(str('      <p>' + str(count) + '</p>\n')) 
+            fileout.write('    </td>\n')
+
             fileout.write('    <td>\n')
             fileout.write(str('      <p>' + package + '</p>\n')) 
             fileout.write('    </td>\n')
