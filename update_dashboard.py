@@ -134,22 +134,38 @@ if __name__ == '__main__':
                 stars_badge = str('https://img.shields.io/github/stars/' + github_user + '/' + package +
                     '?style=social')
             else:
-                stars_badge = str('https://img.shields.io/github/stars/notfound/' + package +
-                    '?style=social')
+                stars_badge = str('https://img.shields.io/badge/stars-na-lightgrey?style=social&logo=github')
 
             fileout.write('    <td>\n')
             fileout.write(str('      <a href="' + homepage + '/stargazers">\n')) 
             fileout.write(str('        <img src="' + stars_badge + '" alt="Github Stars">\n')) 
             fileout.write(str('      </a>\n')) 
             fileout.write('    </td>\n')
+            
+            if github_user is not None:
+                forks_badge = str('https://img.shields.io/github/forks/' + github_user + '/' + package +
+                    '?style=social')
+            else:
+                forks_badge = str('https://img.shields.io/badge/forks-na-lightgrey?style=social&logo=github')
 
             fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + str(forks) + '</p>\n')) 
+            fileout.write(str('      <a href="' + homepage + '/forks">\n')) 
+            fileout.write(str('        <img src="' + forks_badge + '" alt="Github Forks">\n')) 
+            fileout.write(str('      </a>\n')) 
             fileout.write('    </td>\n')
+            
+            if github_user is not None:
+                watchers_badge = str('https://img.shields.io/github/watchers/' + github_user + '/' + package +
+                    '?style=social')
+            else:
+                watchers_badge = str('https://img.shields.io/badge/watchers-na-lightgrey?style=social&logo=github')
 
             fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + str(watchers) + '</p>\n')) 
+            fileout.write(str('      <a href="' + homepage + '/watchers">\n')) 
+            fileout.write(str('        <img src="' + watchers_badge + '" alt="Github Watchers">\n')) 
+            fileout.write(str('      </a>\n')) 
             fileout.write('    </td>\n')
+      
 
             fileout.write('    <td>\n')
             fileout.write(str('      <p>' + str(contributors) + '</p>\n')) 
