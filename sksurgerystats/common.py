@@ -93,5 +93,19 @@ def get_packages(sort_key = None, path = 'libraries/'):
     if sort_key is None:
         return packages
 
+    package_dictionaries = []
+    for package in packages:
+        package_dictionaries.append(
+                {"package" : package,
+                 "sort key" : get_package_information(package, sort_key, path)})
+
+    sorted_dicts = sorted(package_dictionaries, key=lambda k: k['sort key'])
+
+    packages = []
+    for sorted_dict in sorted_dicts:
+        packages.append(sorted_dict.get('package'))
+
+    return packages
+
 
 

@@ -28,7 +28,7 @@ if __name__ == '__main__':
         fileout.write(head)
         
         all_packages = os.listdir('libraries/')
-        packages = get_packages(sort_key = None)
+        packages = get_packages(sort_key = 'First Release Date')
 
         for count, package in enumerate(packages):
             
