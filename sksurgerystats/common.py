@@ -66,7 +66,7 @@ def get_package_information(package, key, path='libraries/'):
     returns a key value for a given package, returns None
     if key not present
     """
-    filename = str('libraries/' + package)
+    filename = str(path + package)
     configuration = None
     with open(filename, 'r') as filein:
         try:
@@ -77,17 +77,20 @@ def get_package_information(package, key, path='libraries/'):
     return configuration.get(key, None)
 
 
-def get_packages(sort_key = None, path = 'libraries/'):
+def get_packages(sort_key = None, path = 'libraries/', 
+        exclusions_path = 'libraries/exclusions/'):
     """
     returns a list of of packages, and optionally sorts by 
     the sort key
     """
-    all_packages = os.listdir('libraries/')
+    all_packages = os.listdir(path)
     packages = []
     for package in all_packages:
-        if not os.path.isdir('libraries/' + package) and not \
+        if not os.path.isdir(path + package) and not \
                 package.endswith(".txt") and not \
-                package.startswith("."):
+                package.startswith(".") and not \
+                os.path.isfile(exclusions_path + package):
+            
             packages.append(package)
 
     if sort_key is None:

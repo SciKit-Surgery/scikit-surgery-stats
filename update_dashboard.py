@@ -146,12 +146,60 @@ if __name__ == '__main__':
                     codeclimate_target, 'SynTek Package Health')
 
             fileout.write('  </tr>\n')
-
+        
 
         fileout.write(tail)
 
 
+    head = ""
+    with open('html/excluded.html.in.head', 'r') as filein:
+        head = filein.read()
 
+    tail = ""
+    with open('html/excluded.html.in.tail', 'r') as filein:
+        tail = filein.read()
 
+    with open('html/exclusions.html' , 'w') as fileout:
+        fileout.write(head)
+
+        excluded_packages = get_packages(sort_key = None, 
+                                         path = 'libraries/exclusions/',
+                                         exclusions_path = 'not a path')
+
+        for new_count, package in enumerate(excluded_packages):
+            homepage = get_package_information(package, 'home_page')
+            if homepage is None:
+                homepage = 'Not Found'
+            
+            fileout.write('  <tr>\n')
+           
+            short_homepage = homepage
+            host_logo = 'None'
+            logo_spacer = ''
+            try:
+                short_homepage = homepage.split('/')[2]
+                host_logo = short_homepage.split('.')[0]
+                if host_logo == 'weisslab':
+                    host_logo = 'gitlab'
+            except:
+                logo_spacer = '.%20%20%20'
+                pass
+            
+            package_badge = str('https://img.shields.io/badge/' + logo_spacer +
+                    str(count+new_count+1) + '-' + package.replace('-', '&#8209') +
+                    '-orange?style=flat&logo=' + host_logo)
+            WriteCellWithLinkedImage(fileout, package_badge , 
+                    homepage, 'Library Homepage')
+
+            reason = get_package_information(package, 'obsolete', 
+                                             path = 'libraries/exclusions/')
+            fileout.write('    <td>\n')
+            fileout.write('      <p>' + str(reason) + '</p>\n')
+            fileout.write('    </td>\n')
+
+            fileout.write('  </tr>\n')
+   
+
+        fileout.write(tail)
 
 
