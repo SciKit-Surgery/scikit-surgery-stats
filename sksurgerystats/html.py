@@ -8,8 +8,8 @@ def WriteCellWithLinkedImage(fileout, image = None, link = None,
     """
     fileout.write('    <td>\n')
     if image is not None:
-        fileout.write(str('      <a href="' + link + '">\n'))
-        fileout.write(str('        <img src="' + image + '" alt="' +
+        fileout.write(str('      <a href="' + str(link) + '">\n'))
+        fileout.write(str('        <img src="' + str(image) + '" alt="' +
                           alt_text + '">\n'))
         fileout.write(str('      </a>\n'))
     fileout.write('    </td>\n')

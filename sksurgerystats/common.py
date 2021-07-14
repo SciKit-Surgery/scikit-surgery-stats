@@ -77,3 +77,21 @@ def get_package_information(package, key, path='libraries/'):
     return configuration.get(key, None)
 
 
+def get_packages(sort_key = None, path = 'libraries/'):
+    """
+    returns a list of of packages, and optionally sorts by 
+    the sort key
+    """
+    all_packages = os.listdir('libraries/')
+    packages = []
+    for package in all_packages:
+        if not os.path.isdir('libraries/' + package) and not \
+                package.endswith(".txt") and not \
+                package.startswith("."):
+            packages.append(package)
+
+    if sort_key is None:
+        return packages
+
+
+

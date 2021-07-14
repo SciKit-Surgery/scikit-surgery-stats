@@ -11,7 +11,7 @@ from datetime import datetime
 import sksurgerystats.from_pypi as skspypi
 from sksurgerystats.from_github import get_github_stats
 from sksurgerystats.common import add_packages, update_package_information, \
-        get_package_information
+        get_package_information, get_packages
 from sksurgerystats.html import WriteCellWithLinkedImage
 
 if __name__ == '__main__':
@@ -28,12 +28,7 @@ if __name__ == '__main__':
         fileout.write(head)
         
         all_packages = os.listdir('libraries/')
-        packages = []
-        for package in all_packages:
-            if not os.path.isdir('libraries/' + package) and not \
-                    package.endswith(".txt") and not \
-                    package.startswith("."):
-                packages.append(package)
+        packages = get_packages(sort_key = None)
 
         for count, package in enumerate(packages):
             
@@ -90,91 +85,39 @@ if __name__ == '__main__':
             fileout.write(str('      <p>' + str(last_release).split('T')[0] + '</p>\n')) 
             fileout.write('    </td>\n')
             
-            if ci_badge is None:
-                ci_badge = "https://img.shields.io/badge/ci.yml-none-lightgrey?style=flat&logo=github"
-            if ci_target is None:
-                ci_target = ""
-            fileout.write('    <td>\n')
-            fileout.write(str('      <a href="' + ci_target + '">\n')) 
-            fileout.write(str('        <img src="' + ci_badge + '" alt="CI Status">\n')) 
-            fileout.write(str('      </a>\n')) 
-            fileout.write('    </td>\n')
+            WriteCellWithLinkedImage(fileout, ci_badge, 
+                    ci_target, 'CI Status')
+            WriteCellWithLinkedImage(fileout, docs_badge, 
+                    docs_target, 'Docs Status')
+            WriteCellWithLinkedImage(fileout, coverage_badge, 
+                    coverage_target, 'Code Coverage')
+            WriteCellWithLinkedImage(fileout, pepy_downloads_badge, 
+                    pepy_downloads_target, 'All Downloads from PePy')
 
-            if docs_badge is None:
-                docs_badge = "https://img.shields.io/badge/docs-none-lightgrey"
-            if docs_target is None:
-                docs_target = ""
-            fileout.write('    <td>\n')
-            fileout.write(str('      <a href="' + docs_target + '">\n')) 
-            fileout.write(str('        <img src="' + docs_badge + '" alt="Docs Status">\n')) 
-            fileout.write(str('      </a>\n')) 
-            fileout.write('    </td>\n')
-            
-            if coverage_badge is None:
-                coverage_badge = "https://img.shields.io/badge/coverage-none-lightgrey"
-            if coverage_target is None:
-                coverage_target = ""
-            fileout.write('    <td>\n')
-            fileout.write(str('      <a href="' + coverage_target + '">\n')) 
-            fileout.write(str('        <img src="' + coverage_badge + '" alt="Docs Status">\n')) 
-            fileout.write(str('      </a>\n')) 
-            fileout.write('    </td>\n')
-
-            if pepy_downloads_badge is None:
-                pepy_downloads_badge = "https://img.shields.io/badge/pepy_downloads-none-lightgrey"
-            if pepy_downloads_target is None:
-                pepy_downloads_target = ""
-            fileout.write('    <td>\n')
-            fileout.write(str('      <a href="' + pepy_downloads_target + '">\n')) 
-            fileout.write(str('        <img src="' + pepy_downloads_badge + '" alt="Docs Status">\n')) 
-            fileout.write(str('      </a>\n')) 
-            fileout.write('    </td>\n')
-           
             github_user = get_package_information(package, 'GitHub User')
+            stars_badge = None
+            forks_badge = None
+            watchers_badge = None
+            contrib_badge = None
             if github_user is not None:
                 stars_badge = str('https://img.shields.io/github/stars/' + github_user + '/' + package +
                     '?style=social')
-            else:
-                stars_badge = str('https://img.shields.io/badge/stars-na-lightgrey?style=social&logo=github')
-
-            fileout.write('    <td>\n')
-            if github_user is not None:
-                fileout.write(str('      <a href="' + homepage + '/stargazers">\n')) 
-                fileout.write(str('        <img src="' + stars_badge + '" alt="Github Stars">\n')) 
-                fileout.write(str('      </a>\n')) 
-            fileout.write('    </td>\n')
-            
-            if github_user is not None:
                 forks_badge = str('https://img.shields.io/github/forks/' + github_user + '/' + package +
                     '?style=social')
-            else:
-                forks_badge = str('https://img.shields.io/badge/forks-na-lightgrey?style=social&logo=github')
-
-            fileout.write('    <td>\n')
-            if github_user is not None:
-                fileout.write(str('      <a href="' + homepage + '/forks">\n')) 
-                fileout.write(str('        <img src="' + forks_badge + '" alt="Github Forks">\n')) 
-                fileout.write(str('      </a>\n')) 
-            fileout.write('    </td>\n')
-            
-            if github_user is not None:
                 watchers_badge = str('https://img.shields.io/github/watchers/' + github_user + '/' + package +
                     '?style=social')
-            else:
-                watchers_badge = str('https://img.shields.io/badge/watchers-na-lightgrey?style=social&logo=github')
-
-            fileout.write('    <td>\n')
-            if github_user is not None:
-                fileout.write(str('      <a href="' + homepage + '/watchers">\n')) 
-                fileout.write(str('        <img src="' + watchers_badge + '" alt="Github Watchers">\n')) 
-                fileout.write(str('      </a>\n')) 
-            fileout.write('    </td>\n')
-            
-            contrib_badge = None
-            if github_user is not None: 
                 contrib_badge = str('https://img.shields.io/badge/contrib-' + 
                         str(contributors) 
                         + '-lightgrey?style=social&logo=github')
+
+            WriteCellWithLinkedImage(fileout, stars_badge, 
+                    str(homepage + '/stargazers'), 'GitHub Stars')
+            
+            WriteCellWithLinkedImage(fileout, forks_badge, 
+                    str(homepage + '/forks'), 'GitHub Forks')
+            
+            WriteCellWithLinkedImage(fileout, watchers_badge, 
+                    str(homepage + '/watchers'), 'GitHub Watchers')
 
             WriteCellWithLinkedImage(fileout, contrib_badge, 
                     str(homepage + '/graphs/contributors'), 'GitHub Contributors')
