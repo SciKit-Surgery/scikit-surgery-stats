@@ -50,7 +50,7 @@ if __name__ == '__main__':
             pepy_downloads_target = get_package_information(package, 'pepy_downloads_target')
             syntek_package_health_badge = get_package_information(package, 'syntek_package_heath_badge')
             syntek_package_health_target = get_package_information(package, 'syntek_package_heath_target')
-            
+           
             homepage = get_package_information(package, 'home_page')
             if homepage is None:
                 homepage = 'Not Found'
@@ -59,29 +59,49 @@ if __name__ == '__main__':
            
             short_homepage = homepage
             host_logo = 'None'
+            logo_spacer = ''
             try:
                 short_homepage = homepage.split('/')[2]
                 host_logo = short_homepage.split('.')[0]
                 if host_logo == 'weisslab':
                     host_logo = 'gitlab'
             except:
-                host_logo = 'None'
+                logo_spacer = '.%20%20%20'
                 pass
             
-            package_badge = str('https://img.shields.io/badge/' + 
+            package_badge = str('https://img.shields.io/badge/' + logo_spacer +
                     str(count) + '-' + package.replace('-', '&#8209') +
                     '-orange?style=flat&logo=' + host_logo)
             WriteCellWithLinkedImage(fileout, package_badge , 
                     homepage, 'Library Homepage')
-
-            fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + str(first_release).split('T')[0] + '</p>\n')) 
-            fileout.write('    </td>\n')
-
-            fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + str(last_release).split('T')[0] + '</p>\n')) 
-            fileout.write('    </td>\n')
             
+            weeks_up = 0
+            try:
+                time_up = datetime.now() - datetime.fromisoformat(first_release)
+                weeks_up = int(time_up.days/7)
+            except ValueError:
+                pass
+            
+            weeks_up_badge = None
+            weeks_up_target = None
+            if weeks_up > 0:
+                weeks_up_badge = str('https://img.shields.io/badge/Weeks%20Up-' + 
+                    str(weeks_up) + '-green?style=flat')
+                weeks_up_target = str(homepage + '/releases')
+
+            WriteCellWithLinkedImage(fileout, weeks_up_badge, 
+                    weeks_up_target, 'Total Weeks Up')
+            
+            last_release_badge = None
+            last_release_target = None
+            if last_release != 'n/a':
+                last_release_badge = str('https://img.shields.io/badge/Last%20Release-' +
+                    str(last_release).split('T')[0].replace('-', '%20') + '-green?style=flat') 
+                last_release_target = str(homepage + '/releases')
+            
+            WriteCellWithLinkedImage(fileout, last_release_badge, 
+                    last_release_target, 'Last Release Date')
+
             WriteCellWithLinkedImage(fileout, ci_badge, 
                     ci_target, 'CI Status')
             WriteCellWithLinkedImage(fileout, docs_badge, 
