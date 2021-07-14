@@ -57,25 +57,22 @@ if __name__ == '__main__':
             
             fileout.write('  <tr>\n')
            
-            fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + str(count) + '</p>\n')) 
-            fileout.write('    </td>\n')
-
-            fileout.write('    <td>\n')
-            fileout.write(str('      <p>' + package + '</p>\n')) 
-            fileout.write('    </td>\n')
-            
             short_homepage = homepage
+            host_logo = 'None'
             try:
                 short_homepage = homepage.split('/')[2]
+                host_logo = short_homepage.split('.')[0]
+                if host_logo == 'weisslab':
+                    host_logo = 'gitlab'
             except:
+                host_logo = 'None'
                 pass
-
-            fileout.write('    <td>\n')
-            fileout.write(str('      <a href="' + homepage + '">\n'))
-            fileout.write(str('        ' + short_homepage + '\n')) 
-            fileout.write(str('      </a>\n')) 
-            fileout.write('    </td>\n')
+            
+            package_badge = str('https://img.shields.io/badge/' + 
+                    str(count) + '-' + package.replace('-', '&#8209') +
+                    '-orange?style=flat&logo=' + host_logo)
+            WriteCellWithLinkedImage(fileout, package_badge , 
+                    homepage, 'Library Homepage')
 
             fileout.write('    <td>\n')
             fileout.write(str('      <p>' + str(first_release).split('T')[0] + '</p>\n')) 
