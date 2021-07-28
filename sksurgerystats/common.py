@@ -1,5 +1,5 @@
 """
-Searches for packages on pypi with SciKit-Surgery in the name, then 
+Searches for packages on pypi with SciKit-Surgery in the name, then
 gets some statistics for them
 """
 
@@ -37,11 +37,11 @@ def add_github_package(github_rep, path = 'libraries/'):
             json.dump(configuration, fileout)
 
 
-def update_package_information(package, key, entry, 
+def update_package_information(package, key, entry,
         overwrite = False, path='libraries/'):
     """
     adds key and entry to a dictionary for the given package.
-    If overwrite is false it will not overwrite existing 
+    If overwrite is false it will not overwrite existing
     entries
     """
     filename = str('libraries/' + package)
@@ -57,10 +57,10 @@ def update_package_information(package, key, entry,
     else:
         if overwrite:
             configuration[key] = entry
-    
+
     with open(filename, 'w') as fileout:
         configuration = json.dump(configuration, fileout)
-    
+
 def get_package_information(package, key, path='libraries/'):
     """
     returns a key value for a given package, returns None
@@ -73,14 +73,14 @@ def get_package_information(package, key, path='libraries/'):
             configuration = json.load(filein)
         except json.JSONDecodeError:
             configuration = {}
-    
+
     return configuration.get(key, None)
 
 
-def get_packages(sort_key = None, path = 'libraries/', 
+def get_packages(sort_key = None, path = 'libraries/',
         exclusions_path = 'libraries/exclusions/'):
     """
-    returns a list of of packages, and optionally sorts by 
+    returns a list of of packages, and optionally sorts by
     the sort key
     """
     all_packages = os.listdir(path)
@@ -90,7 +90,7 @@ def get_packages(sort_key = None, path = 'libraries/',
                 package.endswith(".txt") and not \
                 package.startswith(".") and not \
                 os.path.isfile(exclusions_path + package):
-            
+
             packages.append(package)
 
     if sort_key is None:
@@ -101,6 +101,8 @@ def get_packages(sort_key = None, path = 'libraries/',
         package_dictionaries.append(
                 {"package" : package,
                  "sort key" : get_package_information(package, sort_key, path)})
+        if get_package_information(package, sort_key, path) is None:
+            print(package + " sort key is None ", sort_key)
 
     sorted_dicts = sorted(package_dictionaries, key=lambda k: k['sort key'])
 

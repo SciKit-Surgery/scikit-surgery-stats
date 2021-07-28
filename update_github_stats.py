@@ -1,5 +1,5 @@
 """
-Searches for packages on pypi with SciKit-Surgery in the name, then 
+Searches for packages on pypi with SciKit-Surgery in the name, then
 gets some statistics for them
 """
 
@@ -17,7 +17,7 @@ if __name__ == '__main__':
                 package.endswith(".txt") and not \
                 package.startswith("."):
             packages.append(package)
-   
+
     token = None
     with open("github.token", "r") as token_file:
         token = token_file.read()
@@ -30,22 +30,22 @@ if __name__ == '__main__':
         if homepage is not None:
             rep, stars, watchers, forks, contributors = get_github_stats(homepage, token)
 
-            update_package_information(package, 'GitHub Stars', 
+            update_package_information(package, 'GitHub Stars',
                     stars, overwrite = True)
-            update_package_information(package, 'GitHub Watchers', 
+            update_package_information(package, 'GitHub Watchers',
                     watchers, overwrite = True)
-            update_package_information(package, 'GitHub Forks', 
+            update_package_information(package, 'GitHub Forks',
                     forks, overwrite = True)
-            update_package_information(package, 'GitHub Contributors', 
+            update_package_information(package, 'GitHub Contributors',
                     contributors, overwrite = True)
             try:
-                update_package_information(package, 'GitHub User', 
+                update_package_information(package, 'GitHub User',
                         rep.organization.login, overwrite = True)
+            except AttributeError:
+                try:
+                    update_package_information(package, 'GitHub User',
+                        rep.owner.login, overwrite = True)
+                except:
+                    pass
             except:
                 pass
-
-                 
-
-
-
-   

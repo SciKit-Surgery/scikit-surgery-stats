@@ -31,7 +31,6 @@ if __name__ == '__main__':
         packages = get_packages(sort_key = 'First Release Date')
 
         for count, package in enumerate(packages):
-            
             first_release = get_package_information(package, 'First Release Date')
             last_release = get_package_information(package, 'Last Release Date')
             stars = get_package_information(package, 'GitHub Stars')
