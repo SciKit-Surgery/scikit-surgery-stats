@@ -4,6 +4,7 @@ gets some statistics for them
 """
 import requests
 import os.path
+import shutil
 import urllib 
 import subprocess
 import json
@@ -22,8 +23,8 @@ if __name__ == '__main__':
 
         homepage = get_package_information(package, 'home_page')
         if homepage is not None:
-            subprocess.run(['rm -r -f /dev/shm/sks_temp_for_cloc'])
-            subprocess.run(['git checkout ', homepage, ' /dev/shm/sks_temp_for_cloc'])
+            shutil.rmtree('/dev/shm/sks_temp_for_cloc', ignore_errors = True)
+            subprocess.run(['git',  'clone', homepage, '/dev/shm/sks_temp_for_cloc'])
             exit()
         else:
             print (package , " has no homepage")
