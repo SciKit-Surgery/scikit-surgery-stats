@@ -8,7 +8,7 @@ import shutil
 import urllib 
 import subprocess
 import json
-from datetime import datetime
+import datetime
 import sksurgerystats.from_pypi as skspypi
 from sksurgerystats.from_github import get_github_stats
 from sksurgerystats.common import update_package_information, \
@@ -32,7 +32,7 @@ if __name__ == '__main__':
             commits = subprocess.run(['git', 'log', '--format="%ct %h"'], 
                     capture_output=True).stdout
             for commit in commits.decode('utf-8').splitlines():
-                date = commit.split()[0].replace('"', '')
+                date = datetime.date.fromtimestamp(int(commit.split()[0].replace('"', '')))
                 githash = commit.split()[1].replace('"', '')
                 print ('Date:' , date, ' hash:', githash, end='')
                 loc = subprocess.run(['cloc', githash, '--quiet'],
