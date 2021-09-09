@@ -77,7 +77,7 @@ if __name__ == '__main__':
             subprocess.run(['git',  'clone', homepage, '/dev/shm/sks_temp_for_cloc'])
             commits = get_commits (temp_dir)
             for commit in commits:
-                date = datetime.date.fromtimestamp(int(commit.split()[0].replace('"', '')))
+                date = datetime.datetime.fromtimestamp(int(commit.split()[0].replace('"', '')))
                 githash = commit.split()[1].replace('"', '')
                 if githash not in git_hashes:
                     if not os.path.isfile(cache_file):
