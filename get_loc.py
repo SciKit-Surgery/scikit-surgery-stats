@@ -56,14 +56,16 @@ if __name__ == '__main__':
 
         homepage = get_package_information(package, 'home_page')
         
-        cache_file = str('libraries/lines_of_code/' + package)
+        cache_file = str('libraries/lines_of_code/' + package + '.json')
+        
 
-        git_hashes = []
+        git_hashes = {}
         try:
             with open(cache_file, 'r') as filein:
-                for line in filein.readlines():
-                    if line[0] != '#':
-                        git_hashes.append(line.split()[1])
+                try:
+                    git_hashes = json.load(filein)
+                except json.JSONDecodeError:
+                    pass
         except FileNotFoundError:
             pass
         
@@ -80,15 +82,12 @@ if __name__ == '__main__':
                 date = datetime.datetime.fromtimestamp(int(commit.split()[0].replace('"', '')))
                 githash = commit.split()[1].replace('"', '')
                 if githash not in git_hashes:
-                    if not os.path.isfile(cache_file):
-                        with open(cache_file, 'w') as fileout:
-                            fileout.write('#date hash lines_of_code')
-
-                    with open(cache_file, 'a') as fileout:
-                        loc = get_loc(githash, temp_dir)
-                        fileout.write (str(date.isoformat() + ' ' + githash + ' ' + loc + '\n'))
+                    loc = get_loc(githash, temp_dir)
+                    git_hashes[githash] = { 'loc' : loc , 'date' : date.isoformat() } 
                 else:
                     print("hash " , githash, '  already present')
+            with open(cache_file, 'w') as fileout:
+                json.dump ( git_hashes, fileout)
             exit()
         else:
             print (package , " has no homepage")
