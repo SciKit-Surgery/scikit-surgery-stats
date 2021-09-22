@@ -1,11 +1,13 @@
 scikit-surgery-stats
 ====================
 
-.. raw:: html
-
-    <a href="https://twitter.com/intent/tweet?screen_name=scikit_surgery&ref_src=twsrc%5Etfw" class="twitter-mention-button" data-show-count="false">Tweet to @scikit_surgery</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+.. image:: https://img.shields.io/twitter/url?style=social&url=http%3A%2F%2Fscikit-surgery.org
+   :target: https://twitter.com/intent/tweet?screen_name=scikit_surgery&ref_src=twsrc%5Etfw
+   :alt: Get in touch via twitter
 
 .. image:: https://img.shields.io/twitter/follow/scikit_surgery?style=social
+   :target: https://twitter.com/scikit_surgery?ref_src=twsrc%5Etfw
+   :alt: Follow scikit_surgery on twitter
 
 This is a set of scripts to get statistics on the scikit-surgery library
 and turn them into a nice webpage
