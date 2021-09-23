@@ -2,10 +2,10 @@
 make_plot()
 
 function make_plot(){
-
-	var canvas = document.getElementById('lines_of_code_plot')
+	console.log(scikitsurgerystatsloc);
+	var canvas = document.getElementById('lines_of_code_plot');
 	var ctx = canvas.getContext('2d');
-
+	
 	var data = {
 		datasets: [
 			{ //here we need to make sure the data is in date order or we the connecting line is silly
