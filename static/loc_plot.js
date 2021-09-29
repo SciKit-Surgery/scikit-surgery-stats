@@ -2,7 +2,7 @@
 make_plot()
 
 function make_plot(){
-	console.log(scikitsurgerystatsloc);
+	console.log(loc_data);
 	var canvas = document.getElementById('lines_of_code_plot');
 	var ctx = canvas.getContext('2d');
 	
