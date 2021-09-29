@@ -47,6 +47,26 @@ def get_last_commit(project_name, token = None):
 
     return last_commit
 
+def load_cache_file(filename):
+    """Loads lines of code data from filename, stripping 
+    var_name from the front
+    """
+    ret_dict = {}
+    try:
+        with open(filename, 'r') as filein:
+            try:
+                jsontext = filein.read().split('=')[1]
+                ret_dict = json.loads(jsontext)
+            except json.JSONDecodeError:
+                raise json.JSONDecodeError
+            except IndexError:
+                raise IndexError
+    except FileNotFoundError:
+        pass
+
+    return ret_dict
+
+
 if __name__ == '__main__':
     packages = get_packages()
             
@@ -56,19 +76,9 @@ if __name__ == '__main__':
 
         homepage = get_package_information(package, 'home_page')
         
-        cache_file = str('libraries/lines_of_code/' + package + '.json')
-        
+        cache_file = str('libraries/lines_of_code/' + package + '.js')
 
-        git_hashes = {}
-        try:
-            with open(cache_file, 'r') as filein:
-                try:
-                    git_hashes = json.load(filein)
-                except json.JSONDecodeError:
-                    pass
-        except FileNotFoundError:
-            pass
-        
+        git_hashes = load_cache_file(cache_file)
 
         temp_dir = '/dev/shm/sks_temp_for_cloc'
         if homepage is not None:
@@ -86,8 +96,9 @@ if __name__ == '__main__':
                     git_hashes[githash] = { 'loc' : loc , 'date' : date.isoformat() } 
                 else:
                     print("hash " , githash, '  already present')
+            outstring = str('var loc_data = ' + json.dumps( git_hashes))
             with open(cache_file, 'w') as fileout:
-                json.dump ( git_hashes, fileout)
+                fileout.write(outstring)
             exit()
         else:
             print (package , " has no homepage")
