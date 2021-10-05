@@ -66,6 +66,24 @@ def load_cache_file(filename):
 
     return ret_dict
 
+def make_html_file(package, jsfile, 
+        template_file = 'templates/loc_plot.html'):
+
+    #create dir if not existing
+    try:
+        os.mkdir('loc/')
+    except FileExistsError:
+        pass
+
+    with open(template_file, 'r') as filein:
+        template = filein.read()
+
+    with_title = template.replace('PAGE_TITLE', str(package + ' Lines of Code'))
+    with_heading = with_title.replace('CHART_HEADING', str(package + ' Lines of Code vs Date'))
+    with_data = with_heading.replace('PATH_TO_DATA', str('../' + jsfile)
+
+    with open(str('loc/' + package + '.html'), 'w') as fileout:
+        fileout.write(with_data)
 
 if __name__ == '__main__':
     packages = get_packages()
@@ -77,6 +95,7 @@ if __name__ == '__main__':
         homepage = get_package_information(package, 'home_page')
         
         cache_file = str('libraries/lines_of_code/' + package + '.js')
+        html_file = str('loc/' + package + '.html')
 
         git_hashes = load_cache_file(cache_file)
 
@@ -99,6 +118,9 @@ if __name__ == '__main__':
             outstring = str('var loc_data = ' + json.dumps( git_hashes))
             with open(cache_file, 'w') as fileout:
                 fileout.write(outstring)
+
+            make_html_file(package, cache_file)
+
             exit()
         else:
             print (package , " has no homepage")
