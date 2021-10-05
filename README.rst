@@ -12,7 +12,7 @@ scikit-surgery-stats
 This is a set of scripts to get statistics on the scikit-surgery library
 and turn them into a nice webpage
 
-.. image:: ttps://github.com/ucl/scikit-surgery-stats/raw/master/assets/screenshot.png
+.. image:: https://github.com/ucl/scikit-surgery-stats/raw/master/assets/screenshot.png
     :width: 400px
     :target: http://github-pages.ucl.ac.uk/scikit-surgery-stats/
     :alt: Link to the dashboard
