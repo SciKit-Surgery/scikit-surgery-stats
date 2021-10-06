@@ -20,7 +20,13 @@ def get_loc(githash, directory="./"):
     os.chdir(directory)
     loc = subprocess.run(['cloc', githash, '--quiet'],
         capture_output=True).stdout
-    total = loc.decode('utf-8').replace('-','').split()[-1]
+    
+    total = 0
+    try: 
+        total = loc.decode('utf-8').replace('-','').split()[-1]
+    except IndexError:
+        pass
+
     os.chdir(current_dir)
     return total
 
