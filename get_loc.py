@@ -85,6 +85,26 @@ def make_html_file(package, jsfile,
     with open(str('loc/' + package + '.html'), 'w') as fileout:
         fileout.write(with_data)
 
+def get_loc_by_commit(temp_dir, existing_commits):
+    commits = get_commits (temp_dir)
+    for commit in commits:
+        date = datetime.datetime.fromtimestamp(int(commit.split()[0].replace('"', '')))
+        githash = commit.split()[1].replace('"', '')
+        if githash not in existing_commits:
+            loc = get_loc(githash, temp_dir)
+            existing_commits[githash] = { 'loc' : loc , 'date' : date.isoformat() } 
+        else:
+            print("hash " , githash, '  already present')
+    sorted_commits = dict(sorted(existing_commits.items(), key=lambda item: item[1]['date']))
+    return sorted_commits
+
+def write_to_js_file(data, fileout):
+
+    outstring = str('var loc_data = ' + json.dumps(data))
+    with open(fileout, 'w') as fileout:
+        fileout.write(outstring)
+
+
 if __name__ == '__main__':
     packages = get_packages()
             
@@ -105,21 +125,12 @@ if __name__ == '__main__':
                 print("No need to update ", package, " skipping")
                 continue
             shutil.rmtree(temp_dir, ignore_errors = True)
-            subprocess.run(['git',  'clone', homepage, '/dev/shm/sks_temp_for_cloc'])
-            commits = get_commits (temp_dir)
-            for commit in commits:
-                date = datetime.datetime.fromtimestamp(int(commit.split()[0].replace('"', '')))
-                githash = commit.split()[1].replace('"', '')
-                if githash not in git_hashes:
-                    loc = get_loc(githash, temp_dir)
-                    git_hashes[githash] = { 'loc' : loc , 'date' : date.isoformat() } 
-                else:
-                    print("hash " , githash, '  already present')
-            sorted_hashes = dict(sorted(git_hashes.items(), key=lambda item: item[1]['date']))
-            outstring = str('var loc_data = ' + json.dumps( sorted_hashes))
-            with open(cache_file, 'w') as fileout:
-                fileout.write(outstring)
-
+            subprocess.run(['git',  'clone', homepage, temp_dir])
+            sorted_hashes = get_loc_by_commit(temp_dir, git_hashes)
+           
+            last_loc = sorted_hashes[list(sorted_hashes)[-1]]['loc']
+            update_package_information(package, 'loc', last_loc, overwrite = True) 
+            write_to_js_file(sorted_hashes, cache_file)
             make_html_file(package, cache_file)
 
             exit()
