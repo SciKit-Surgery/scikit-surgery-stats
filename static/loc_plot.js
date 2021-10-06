@@ -9,6 +9,13 @@ function make_plot(){
 	var canvas = document.getElementById('lines_of_code_plot');
 	var ctx = canvas.getContext('2d');
 	
+	//sort the data by date	
+	data_to_plot.sort(function(a, b) {
+		var keyA = new Date(a.x);
+		var keyB = new Date(b.x);
+		return keyA - keyB;
+	});
+
 	var data = {
 		datasets: [
 			{ 
