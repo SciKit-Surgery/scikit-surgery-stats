@@ -123,7 +123,10 @@ if __name__ == '__main__':
         if homepage is not None:
             if get_last_commit(homepage) in git_hashes:
                 print("No need to update ", package, " skipping")
+                last_loc = git_hashes[list(git_hashes)[-1]]['loc']
+                update_package_information(package, 'loc', last_loc, overwrite = False) 
                 continue
+
             shutil.rmtree(temp_dir, ignore_errors = True)
             subprocess.run(['git',  'clone', homepage, temp_dir])
             sorted_hashes = get_loc_by_commit(temp_dir, git_hashes)
