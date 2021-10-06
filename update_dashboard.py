@@ -49,6 +49,7 @@ if __name__ == '__main__':
             pepy_downloads_target = get_package_information(package, 'pepy_downloads_target')
             syntek_package_health_badge = get_package_information(package, 'syntek_package_heath_badge')
             syntek_package_health_target = get_package_information(package, 'syntek_package_heath_target')
+            lines_of_code = get_package_information(package, 'loc')
            
             homepage = get_package_information(package, 'home_page')
             if homepage is None:
@@ -107,6 +108,16 @@ if __name__ == '__main__':
                     docs_target, 'Docs Status')
             WriteCellWithLinkedImage(fileout, coverage_badge, 
                     coverage_target, 'Code Coverage')
+
+            loc_badge = None
+            loc_link = str('loc/' + package + '.html')
+            if lines_of_code is not None:
+                loc_badge = str('https://img.shields.io/badge/LOC-' +
+                    str(lines_of_code) + '-blue?style=flat')
+                print (loc_badge)
+             
+            WriteCellWithLinkedImage(fileout, loc_badge, loc_link, 'Lines of Code')
+
             WriteCellWithLinkedImage(fileout, pepy_downloads_badge, 
                     pepy_downloads_target, 'All Downloads from PePy')
 
