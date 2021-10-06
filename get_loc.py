@@ -107,7 +107,12 @@ def write_to_js_file(data, fileout):
 
 if __name__ == '__main__':
     packages = get_packages()
-            
+        
+    token = None
+    with open("github.token", "r") as token_file:
+        token = token_file.read()
+        token = token.rstrip('\n')
+
     for package in packages:
         
         print("Counting lines of ", package)
@@ -121,10 +126,13 @@ if __name__ == '__main__':
 
         temp_dir = '/dev/shm/sks_temp_for_cloc'
         if homepage is not None:
-            if get_last_commit(homepage) in git_hashes:
-                print("No need to update ", package, " skipping")
-                last_loc = git_hashes[list(git_hashes)[-1]]['loc']
-                update_package_information(package, 'loc', last_loc, overwrite = False) 
+            try:
+                if get_last_commit(homepage, token) in git_hashes:
+                    print("No need to update ", package, " skipping")
+                    last_loc = git_hashes[list(git_hashes)[-1]]['loc']
+                    update_package_information(package, 'loc', last_loc, overwrite = False) 
+                    continue
+            except GithubException:
                 continue
 
             shutil.rmtree(temp_dir, ignore_errors = True)
