@@ -135,8 +135,6 @@ if __name__ == '__main__':
             update_package_information(package, 'loc', last_loc, overwrite = True) 
             write_to_js_file(sorted_hashes, cache_file)
             make_html_file(package, cache_file)
-
-            exit()
         else:
             print (package , " has no homepage")
 
