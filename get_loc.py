@@ -139,7 +139,7 @@ if __name__ == '__main__':
                     update_package_information(package, 'loc', last_loc, overwrite = False) 
                     continue
             except GithubException:
-                continue
+                pass
 
             shutil.rmtree(temp_dir, ignore_errors = True)
             subprocess.run(['git',  'clone', homepage, temp_dir])
