@@ -114,7 +114,6 @@ if __name__ == '__main__':
             if lines_of_code is not None:
                 loc_badge = str('https://img.shields.io/badge/LOC-' +
                     str(lines_of_code) + '-blue?style=flat')
-                print (loc_badge)
              
             WriteCellWithLinkedImage(fileout, loc_badge, loc_link, 'Lines of Code')
 
