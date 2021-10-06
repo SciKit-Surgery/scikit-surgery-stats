@@ -2,7 +2,7 @@
 make_plot()
 
 function make_plot(){
-	var data_to_plot = [];
+	let data_to_plot = [];
 	for (const [key, value] of Object.entries(loc_data)) {
 		data_to_plot.push({ x: value['date'], y: value['loc']});
 	}

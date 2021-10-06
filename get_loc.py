@@ -80,7 +80,7 @@ def make_html_file(package, jsfile,
 
     with_title = template.replace('PAGE_TITLE', str(package + ' Lines of Code'))
     with_heading = with_title.replace('CHART_HEADING', str(package + ' Lines of Code vs Date'))
-    with_data = with_heading.replace('PATH_TO_DATA', str('../' + jsfile)
+    with_data = with_heading.replace('PATH_TO_DATA', str('../' + jsfile))
 
     with open(str('loc/' + package + '.html'), 'w') as fileout:
         fileout.write(with_data)
@@ -115,7 +115,8 @@ if __name__ == '__main__':
                     git_hashes[githash] = { 'loc' : loc , 'date' : date.isoformat() } 
                 else:
                     print("hash " , githash, '  already present')
-            outstring = str('var loc_data = ' + json.dumps( git_hashes))
+            sorted_hashes = dict(sorted(git_hashes.items(), key=lambda item: item[1]['date']))
+            outstring = str('var loc_data = ' + json.dumps( sorted_hashes))
             with open(cache_file, 'w') as fileout:
                 fileout.write(outstring)
 
