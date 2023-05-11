@@ -108,15 +108,23 @@ if __name__ == '__main__':
                 update_package_information(package, 'coverage_target', coverage_target,
                         overwrite = True)
 
-        #check and update docs
         if docs_badge is not None:
-            req=requests.get(docs_badge)
+            try: 
+                req=requests.get(docs_badge)
+            except:
+                req=requests.get(docs_badge, verify=False) 
+                #This conditional protects against some of the certificate errors we got with especially excluded libraries
+                
             if req.status_code == 200:
                 update_package_information(package, 'docs_badge', docs_badge,
                         overwrite = False)
         
         if docs_target is not None:
-            req=requests.get(docs_target)
+            try: 
+                req=requests.get(docs_target)
+            except:
+                req=requests.get(docs_target, verify=False)
+                #This conditional protects against some of the certificate errors we got with especially excluded libraries
             if req.status_code == 200:
                 update_package_information(package, 'docs_target', docs_target,
                         overwrite = True)
