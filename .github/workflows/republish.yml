@@ -1,0 +1,22 @@
+name: Republish
+
+#on:
+#  schedule:
+#    - cron: '1 18 * * *'  # Run at 6:01 pm every day.
+
+#for now only trigger on PRs 
+on:
+  pull_request:
+    types: [opened, reopened]
+jobs:
+  #refresh:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GH Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./public
+      
+    
