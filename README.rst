@@ -19,10 +19,24 @@ and turn them into a nice webpage
 
 ::
 
+Use instructions
+=============  
+
+1. Activating the environment
+
     mkdir env
     python -m venv env/
     source env/bin/activate
     pip install -r requirements
+
+2. Make sure you have a personal access token for Github API generated from (here)[https://github.com/settings/personal-access-tokens/new]
+and is saved in the base directory under `github.token`
+
+3. Running the pipeline that generates dashboard.html and associated files needed by Github Pages
+
+    bash Makefile
+
+*  Inspect with pypi
 
     ./pypi-simple-search scikit-surgery > scikit-surgery-onpypi.txt
 
