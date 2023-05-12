@@ -1,3 +1,4 @@
+printf '%s\n' "$github_token" >github_token
 #step 1 search for relevant packages on pypi and githib
 python get_pypi_repos.py
 python get_github_repos.py
