@@ -23,11 +23,15 @@ jobs:
           cache: 'pip' # caching pip dependencies  
       - run: pip install -r requirements.txt
       
-      - name: Make the github token available for py scripts
-        run: printf '%s\n' "$pat_token" > github.token
-        env:
-          pat_token: ${{ secrets.PAT }}
+      #cannot use actions that require github.token as currently we cannot add it to secret 
+      #- name: Make the github token available for py scripts
+      #  run: printf '%s\n' "$pat_token" > github.token
+      #  env:
+      #    pat_token: use secrets
       
+      - name: Regenerate Dashboard 🚀
+        run: python update_dashboard.py
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
