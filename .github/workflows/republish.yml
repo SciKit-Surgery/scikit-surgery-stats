@@ -25,6 +25,9 @@ jobs:
       
       - name: Build dashboards
         run: bash Makefile 
+        env:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
