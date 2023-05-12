@@ -16,6 +16,14 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
+      - name: Set environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip' # caching pip dependencies  
+      - run: pip install -r requirements.txt
+        
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
