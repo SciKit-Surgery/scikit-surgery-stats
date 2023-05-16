@@ -130,7 +130,9 @@ if __name__ == '__main__':
 
         git_hashes = load_cache_file(cache_file)
 
-        temp_dir = '/dev/shm/sks_temp_for_cloc'
+        temp_dir = os.path.join(os.getcwd(), 'temp')
+        if not os.path.exists(temp_dir):
+            os.mkdir(temp_dir)
         if homepage is not None:
             try:
                 if get_last_commit(homepage, token) in git_hashes:
