@@ -27,7 +27,7 @@ jobs:
       - name: Make the github token available for py scripts - test
         run: admin_token=${{ secrets.ADMIN_TOKEN }} python update_github_stats.py
           #printf '%s\n' "$pat_token" > github.token
-        with:
+        env:
            admin_token: ${{ secrets.ADMIN_TOKEN }}
       
       - name: Regenerate Dashboard 🚀
