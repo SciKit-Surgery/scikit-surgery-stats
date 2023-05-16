@@ -24,10 +24,10 @@ jobs:
       - run: pip install -r requirements.txt
       
       #cannot use actions that require github.token as currently we cannot add it to secret 
-      #- name: Make the github token available for py scripts
-      #  run: printf '%s\n' "$pat_token" > github.token
-      #  env:
-      #    pat_token: use secrets
+      - name: Make the github token available for py scripts
+        run: echo ${{ secrets.ADMIN_TOKEN }}
+          #printf '%s\n' "$pat_token" > github.token
+
       
       - name: Regenerate Dashboard 🚀
         run: python update_dashboard.py
