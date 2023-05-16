@@ -40,7 +40,7 @@ jobs:
              python get_badges.py
              echo "step 5 done"
         env:
-           TOKEN: ${{ secrets.ADMIN_TOKEN }}
+           admin_token: ${{ secrets.ADMIN_TOKEN }}
       
       - name: Regenerate Dashboard 🚀
         run: python update_dashboard.py
