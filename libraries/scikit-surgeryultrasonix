@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"Number of Releases": 2, "First Release Date": "2021-12-16T11:37:51", "Last Release Date": "2021-12-16T12:17:33", "Last Release Name": "0.1.1", "pepy_downloads_target": "https://pepy.tech/project/scikit-surgeryultrasonix/?branch=master"}
+=======
+{"Number of Releases": 2, "First Release Date": "2021-12-16T11:37:51", "Last Release Date": "2021-12-16T12:17:33", "Last Release Name": "0.1.1"}
+>>>>>>> 170b0fb (filter library names that have whitespaces)
