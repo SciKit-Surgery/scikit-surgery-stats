@@ -1,5 +1,19 @@
 from github import Github, GithubException
+from os import environ
 
+def get_token():
+    """ Get github personal access token. This function checks if the environment variable 
+        added as secret.ADMIN_TOKEN exists (ex. inside a GHA) or a local github.token
+        file exists, and returns whichever token exists.
+    """
+    if environ.get('admin_token') is not None:
+        token = environ.get('admin_token')
+    else:
+        with open("github.token", "r") as token_file:
+            token = token_file.read()
+            token = token.rstrip('\n')
+    return token
+        
 def get_github_stats(project_name, token = None):
     """ Get in formatation from github. project name can either be
     the github project name or the web address
