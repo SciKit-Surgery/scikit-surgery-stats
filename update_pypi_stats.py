@@ -7,6 +7,7 @@ import os.path
 import urllib.request
 import subprocess
 import json
+import re
 from datetime import datetime
 import sksurgerystats.from_pypi as skspypi
 from sksurgerystats.from_github import get_github_stats
@@ -19,6 +20,7 @@ if __name__ == '__main__':
     for package in all_packages:
         if not os.path.isdir('libraries/' + package) and not \
                 package.endswith(".txt") and not \
+                re.search(r"\s", package) and not \
                 package.startswith("."):
             packages.append(package)
     
