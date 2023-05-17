@@ -17,20 +17,38 @@ and turn them into a nice webpage
     :target: http://scikit-surgery.github.io/scikit-surgery-stats/
     :alt: Link to the dashboard
 
-::
 
-    mkdir env
-    python -m venv env/
-    source env/bin/activate
-    pip install -r requirements
 
-    ./pypi-simple-search scikit-surgery > scikit-surgery-onpypi.txt
+Use instructions
+=================    
 
-    python get_github_repos.py > scikit-surgery-ongithub.txt                                                                    
+1. Activating the environment
 
-We can use pypinfo to get data for things on pypi
+        mkdir env
 
-::
-    pypinfo --auth snappy-downloads-3d3fb7e245fd.json
-    pypinfo scikit-surgeryvtk country
-~           
+        python -m venv env/
+
+        source env/bin/activate
+
+        pip install -r requirements
+
+2. Make sure you have a personal access token for Github API generated from `here <https://github.com/settings/personal-access-tokens/new>`_
+    and is saved in the base directory under a file named `github.token`
+
+3. Running the pipeline that generates dashboard.html and associated files needed by Github Pages
+
+        bash Makefile
+
+
+*  Inspect libraries with pypi
+
+        ./pypi-simple-search scikit-surgery > scikit-surgery-onpypi.txt
+
+        python get_github_repos.py > scikit-surgery-ongithub.txt                                                                    
+
+    We can use pypinfo to get data for things on pypi
+
+
+        pypinfo --auth snappy-downloads-3d3fb7e245fd.json
+        pypinfo scikit-surgeryvtk country
+        
