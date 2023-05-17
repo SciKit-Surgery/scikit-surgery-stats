@@ -7,9 +7,29 @@ import os.path
 import urllib.request
 import subprocess
 import json
+import re
 from datetime import datetime
 
 #packages = os.system('./pypi-simple-search scikit-surgery')
+
+def get_list_of_packages(all_packages, path = 'libraries/'):
+    """
+    For the given list, filter for the actual list of available packages with:
+    1. check the package in libraries path exists
+    2. doesn't end with txt
+    3. doesn't have whitespaces
+    4. doesn't start with .
+    
+    """
+    packages = []
+    for package in all_packages:
+        if not os.path.isdir(path + package) and not \
+                package.endswith(".txt") and not \
+                re.search(r"\s", package) and not \
+                package.startswith("."):
+            packages.append(package)
+    return packages 
+
 
 def add_packages(packages, path = 'libraries/'):
     """
@@ -84,14 +104,7 @@ def get_packages(sort_key = None, path = 'libraries/',
     the sort key
     """
     all_packages = os.listdir(path)
-    packages = []
-    for package in all_packages:
-        if not os.path.isdir(path + package) and not \
-                package.endswith(".txt") and not \
-                package.startswith(".") and not \
-                os.path.isfile(exclusions_path + package):
-
-            packages.append(package)
+    packages = get_list_of_packages(all_packages)
 
     if sort_key is None:
         return packages
