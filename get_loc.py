@@ -11,7 +11,7 @@ import json
 import datetime
 import subprocess
 from github import Github, GithubException
-from sksurgerystats.from_github import get_github_stats
+from sksurgerystats.from_github import get_github_stats, get_token
 from sksurgerystats.common import update_package_information, \
         get_package_information, get_packages
 
@@ -91,8 +91,8 @@ def make_html_file(package, jsfile,
     with open(str('loc/' + package + '.html'), 'w') as fileout:
         fileout.write(with_data)
 
-def get_loc_by_commit(temp_dir, existing_commits):
-    commits = get_commits (temp_dir)
+def get_loc_by_commit(temp_dir, existing_commit):
+    commits = get_commits(temp_dir)
     for commit in commits:
         date = datetime.datetime.fromtimestamp(int(commit.split()[0].replace('"', '')))
         githash = commit.split()[1].replace('"', '')
@@ -101,8 +101,8 @@ def get_loc_by_commit(temp_dir, existing_commits):
             existing_commits[githash] = { 'loc' : loc , 'date' : date.isoformat() } 
         else:
             print("hash " , githash, '  already present')
-    sorted_commits = dict(sorted(existing_commits.items(), key=lambda item: item[1]['date']))
-    return sorted_commits
+
+    return existing_commits
 
 def write_to_js_file(data, fileout):
 
@@ -115,9 +115,7 @@ if __name__ == '__main__':
     packages = get_packages()
         
     token = None
-    with open("github.token", "r") as token_file:
-        token = token_file.read()
-        token = token.rstrip('\n')
+    token = get_token()
 
     for package in packages:
         
@@ -127,9 +125,11 @@ if __name__ == '__main__':
         
         cache_file = str('libraries/lines_of_code/' + package + '.js')
         html_file = str('loc/' + package + '.html')
-
+        if not os.path.exists(cache_file):
+            continue
         git_hashes = load_cache_file(cache_file)
-
+        last_hash = git_hashes[list(git_hashes)[-1]]
+        
         temp_dir = os.path.join(os.getcwd(), 'temp')
         if not os.path.exists(temp_dir):
             os.mkdir(temp_dir)
@@ -137,19 +137,18 @@ if __name__ == '__main__':
             try:
                 if get_last_commit(homepage, token) in git_hashes:
                     print("No need to update ", package, " skipping")
-                    last_loc = git_hashes[list(git_hashes)[-1]]['loc']
+                    last_loc = last_hash['loc']
                     update_package_information(package, 'loc', last_loc, overwrite = False) 
                     continue
             except GithubException:
                 pass
 
             shutil.rmtree(temp_dir, ignore_errors = True)
-            subprocess.run(['git',  'clone', homepage, temp_dir])
-            sorted_hashes = get_loc_by_commit(temp_dir, git_hashes)
+            subprocess.run(['git',  'clone', '--depth', '1', homepage, temp_dir]) 
+            last_loc = get_loc_by_commit(temp_dir, last_hash)['loc']
            
-            last_loc = sorted_hashes[list(sorted_hashes)[-1]]['loc']
             update_package_information(package, 'loc', last_loc, overwrite = True) 
-            write_to_js_file(sorted_hashes, cache_file)
+            write_to_js_file(last_hash, cache_file)
             make_html_file(package, cache_file)
         else:
             print (package , " has no homepage")
