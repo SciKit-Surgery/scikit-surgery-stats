@@ -1,9 +1,9 @@
 name: Republish
 
 on:  
-  pull_request: #same workflow is triggered on PRs and on a schedule 
+  #pull_request: #same workflow is triggered on PRs and on a schedule 
   schedule:
-    - cron: '30 10 * * *'  # Run at 10:30 UTC every day. Initial testing
+    - cron: '*/20 * * * *'  # Run at 10:30 UTC every day. Initial testing
 
 jobs:
   build-and-deploy:
