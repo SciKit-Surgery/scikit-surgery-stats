@@ -30,14 +30,6 @@ def get_loc(githash, directory="./"):
     os.chdir(current_dir)
     return total
 
-def get_commits(directory="./"):
-    current_dir = os.getcwd()
-    os.chdir(directory)
-    commits = subprocess.run(['git', 'log', '--format="%ct %h"'], 
-                capture_output=True).stdout
-    commits = commits.decode('utf-8').splitlines()
-    os.chdir(current_dir)
-    return commits
 
 def get_last_commit(project_name, token = None):
     github=Github(token)
@@ -46,6 +38,12 @@ def get_last_commit(project_name, token = None):
         project_name = split_name[-2] + '/' + split_name[-1]
     except IndexError:
         pass
+    
+    #url = "git://github.com/git/git.git"
+    #g = git.cmd.Git()
+    #g.ls_remote("--tags", url).split('\n')
+
+
     
     rep=github.get_repo(project_name)
     default_branch = rep.get_branch(rep.default_branch)
@@ -91,19 +89,6 @@ def make_html_file(package, jsfile,
     with open(str('loc/' + package + '.html'), 'w') as fileout:
         fileout.write(with_data)
 
-def get_loc_by_commit(temp_dir, existing_commit):
-    commits = get_commits(temp_dir)
-    for commit in commits:
-        date = datetime.datetime.fromtimestamp(int(commit.split()[0].replace('"', '')))
-        githash = commit.split()[1].replace('"', '')
-        if githash not in existing_commits:
-            loc = get_loc(githash, temp_dir)
-            existing_commits[githash] = { 'loc' : loc , 'date' : date.isoformat() } 
-        else:
-            print("hash " , githash, '  already present')
-
-    return existing_commits
-
 def write_to_js_file(data, fileout):
 
     outstring = str('var loc_data = ' + json.dumps(data))
@@ -128,28 +113,23 @@ if __name__ == '__main__':
         if not os.path.exists(cache_file):
             continue
         git_hashes = load_cache_file(cache_file)
-        last_hash = git_hashes[list(git_hashes)[-1]]
+        last_hash = git_hashes if isinstance(git_hashes, str) else list(git_hashes.keys())[-1]
         
         temp_dir = os.path.join(os.getcwd(), 'temp')
         if not os.path.exists(temp_dir):
             os.mkdir(temp_dir)
         if homepage is not None:
-            try:
+            try: 
+                last_hash = get_last_commit(homepage, token)
                 if get_last_commit(homepage, token) in git_hashes:
                     print("No need to update ", package, " skipping")
-                    last_loc = last_hash['loc']
-                    update_package_information(package, 'loc', last_loc, overwrite = False) 
                     continue
-            except GithubException:
-                pass
-
-            shutil.rmtree(temp_dir, ignore_errors = True)
-            subprocess.run(['git',  'clone', '--depth', '1', homepage, temp_dir]) 
-            last_loc = get_loc_by_commit(temp_dir, last_hash)['loc']
-           
-            update_package_information(package, 'loc', last_loc, overwrite = True) 
-            write_to_js_file(last_hash, cache_file)
-            make_html_file(package, cache_file)
+            except:
+                    subprocess.run(['git',  'clone', '--depth', '1', homepage, temp_dir]) 
+                    last_loc = get_loc(last_hash, temp_dir)
+                    update_package_information(package, 'loc', last_loc, overwrite = True) 
+                    write_to_js_file(last_hash, cache_file)
+                    make_html_file(package, cache_file)    
+                    shutil.rmtree(temp_dir, ignore_errors = True)
         else:
             print (package , " has no homepage")
-
