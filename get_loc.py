@@ -2,98 +2,15 @@
 Searches for packages on pypi with SciKit-Surgery in the name, then 
 gets some statistics for them
 """
-import requests
 import os.path
 import shutil
-import urllib 
 import subprocess
-import json
-import datetime
 import subprocess
 from github import Github, GithubException
-from sksurgerystats.from_github import get_github_stats, get_token
+from sksurgerystats.html import load_cache_file, make_html_file, write_to_js_file
+from sksurgerystats.from_github import get_github_stats, get_token, get_loc, get_last_commit
 from sksurgerystats.common import update_package_information, \
         get_package_information, get_packages
-
-def get_loc(githash, directory="./"):
-    current_dir = os.getcwd()
-    os.chdir(directory)
-    loc = subprocess.run(['cloc', githash, '--quiet'],
-        capture_output=True).stdout
-    
-    total = 0
-    try: 
-        total = loc.decode('utf-8').replace('-','').split()[-1]
-    except IndexError:
-        pass
-
-    os.chdir(current_dir)
-    return total
-
-
-def get_last_commit(project_name, token = None):
-    github=Github(token)
-    split_name = project_name.split('/')
-    try:
-        project_name = split_name[-2] + '/' + split_name[-1]
-    except IndexError:
-        pass
-    
-    #url = "git://github.com/git/git.git"
-    #g = git.cmd.Git()
-    #g.ls_remote("--tags", url).split('\n')
-
-
-    
-    rep=github.get_repo(project_name)
-    default_branch = rep.get_branch(rep.default_branch)
-    last_commit = default_branch.commit.sha[0:7]
-
-    return last_commit
-
-def load_cache_file(filename):
-    """Loads lines of code data from filename, stripping 
-    var_name from the front
-    """
-    ret_dict = {}
-    try:
-        with open(filename, 'r') as filein:
-            try:
-                jsontext = filein.read().split('=')[1]
-                ret_dict = json.loads(jsontext)
-            except json.JSONDecodeError:
-                raise json.JSONDecodeError
-            except IndexError:
-                raise IndexError
-    except FileNotFoundError:
-        pass
-
-    return ret_dict
-
-def make_html_file(package, jsfile, 
-        template_file = 'templates/loc_plot.html'):
-
-    #create dir if not existing
-    try:
-        os.mkdir('loc/')
-    except FileExistsError:
-        pass
-
-    with open(template_file, 'r') as filein:
-        template = filein.read()
-
-    with_title = template.replace('PAGE_TITLE', str(package + ' Lines of Code'))
-    with_heading = with_title.replace('CHART_HEADING', str(package + ' Lines of Code vs Date'))
-    with_data = with_heading.replace('PATH_TO_DATA', str('../' + jsfile))
-
-    with open(str('loc/' + package + '.html'), 'w') as fileout:
-        fileout.write(with_data)
-
-def write_to_js_file(data, fileout):
-
-    outstring = str('var loc_data = ' + json.dumps(data))
-    with open(fileout, 'w') as fileout:
-        fileout.write(outstring)
 
 
 if __name__ == '__main__':
@@ -102,6 +19,10 @@ if __name__ == '__main__':
     token = None
     token = get_token()
 
+    #cleanup of temp directory if script couldn't complete the last time it was run 
+    temp_dir = os.path.join(os.getcwd(), 'temp')
+    shutil.rmtree(temp_dir, ignore_errors = True) 
+    
     for package in packages:
         
         print("Counting lines of ", package)
@@ -115,7 +36,6 @@ if __name__ == '__main__':
         git_hashes = load_cache_file(cache_file)
         last_hash = git_hashes if isinstance(git_hashes, str) else list(git_hashes.keys())[-1]
         
-        temp_dir = os.path.join(os.getcwd(), 'temp')
         if not os.path.exists(temp_dir):
             os.mkdir(temp_dir)
         if homepage is not None:
