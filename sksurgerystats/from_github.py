@@ -1,13 +1,52 @@
 from github import Github, GithubException
-from os import environ
+import os
+import subprocess
+from github import Github, GithubException
+
+def get_loc(githash, directory="./"):
+    """ Use git hash of the repository (already cloned in current_dir) to run `cloc` function which counts the lines of code. 
+        Total parses the cloc output to get the total lines of code and return that.
+    """
+    current_dir = os.getcwd()
+    os.chdir(directory)
+    loc = subprocess.run(['cloc', githash, '--quiet'],
+        capture_output=True).stdout
+    
+    total = 0
+    try: 
+        total = loc.decode('utf-8').replace('-','').split()[-1]
+    except IndexError:
+        pass
+
+    os.chdir(current_dir)
+    return total
+
+
+def get_last_commit(project_name, token = None):
+    """ Use github API to get information on a repository with the passed `project_name`
+        and return the last_commit hash key from the default_branch of the repository
+    """
+    github=Github(token)
+    split_name = project_name.split('/')
+    try:
+        project_name = split_name[-2] + '/' + split_name[-1]
+    except IndexError:
+        pass
+
+    rep=github.get_repo(project_name)
+    default_branch = rep.get_branch(rep.default_branch)
+    last_commit = default_branch.commit.sha[0:7]
+
+    return last_commit
+
 
 def get_token():
     """ Get github personal access token. This function checks if the environment variable 
         added as secret.ADMIN_TOKEN exists (ex. inside a GHA) or a local github.token
         file exists, and returns whichever token exists.
     """
-    if environ.get('admin_token') is not None:
-        token = environ.get('admin_token')
+    if os.environ.get('admin_token') is not None:
+        token = os.environ.get('admin_token')
     else:
         with open("github.token", "r") as token_file:
             token = token_file.read()
