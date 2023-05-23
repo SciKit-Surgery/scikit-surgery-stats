@@ -25,7 +25,6 @@ jobs:
       
       - name: Analysis pipeline using personal token
         run: |
-             echo  $admin_token | sed 's/./& /g'
              echo "start pipeline"
              python get_pypi_repos.py
              echo "step 1 done"
