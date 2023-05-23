@@ -5,7 +5,7 @@ gets some statistics for them
 
 import os.path
 import urllib.request
-from sksurgerystats.from_github import get_github_stats
+from sksurgerystats.from_github import get_github_stats, get_token
 from sksurgerystats.common import update_package_information, \
         get_package_information
 
@@ -19,9 +19,7 @@ if __name__ == '__main__':
             packages.append(package)
 
     token = None
-    with open("github.token", "r") as token_file:
-        token = token_file.read()
-        token = token.rstrip('\n')
+    token = get_token()
 
     package_dictionaries = []
     for package in packages:

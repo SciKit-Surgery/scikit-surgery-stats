@@ -1,0 +1,53 @@
+name: Republish
+
+#on:
+#  schedule:
+#    - cron: '1 18 * * *'  # Run at 6:01 pm every day.
+
+#for now only trigger on PRs 
+on:
+  pull_request:
+
+jobs:
+  build-and-deploy:
+    concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Set environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip' # caching pip dependencies  
+      - run: pip install -r requirements.txt
+      
+      - name: Analysis pipeline using personal token
+        run: |
+             echo "start pipeline"
+             python get_pypi_repos.py
+             echo "step 1 done"
+             python get_github_repos.py
+             echo "step 2 done"
+             python update_pypi_stats.py
+             echo "step 3 done"
+             python update_github_stats.py
+             echo "step 4 done"
+             python get_badges.py
+             echo "step 5 done"
+          #admin_token= python update_github_stats.py
+          #printf '%s\n' "$pat_token" > github.token
+        env:
+           admin_token: ${{ secrets.ADMIN_TOKEN }}
+      
+      - name: Regenerate Dashboard 🚀
+        run: python update_dashboard.py
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: . # The folder the action should deploy.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+

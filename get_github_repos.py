@@ -1,10 +1,10 @@
 from github import Github
+from os import environ
 from sksurgerystats.common import add_github_package
+from sksurgerystats.from_github import get_token
 
 token = None
-with open("github.token", "r") as token_file:
-    token = token_file.read()
-    token = token.rstrip('\n')
+token = get_token()
 
 if token is not None:
     g = Github(token)
