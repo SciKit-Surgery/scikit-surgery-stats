@@ -11,18 +11,13 @@ from datetime import datetime
 import sksurgerystats.from_pypi as skspypi
 from sksurgerystats.from_github import get_github_stats
 from sksurgerystats.common import add_packages, update_package_information, \
-        get_package_information
+        get_package_information, get_list_of_packages
 
 if __name__ == '__main__':
     all_packages = os.listdir('libraries/')
-    packages = []
-    for package in all_packages:
-        if not os.path.isdir('libraries/' + package) and not \
-                package.endswith(".txt") and not \
-                package.startswith("."):
-            packages.append(package)
+    packages = get_list_of_packages(all_packages)
 
-            
+
     for package in packages:
         
         print("Getting badges for ", package)
@@ -75,7 +70,7 @@ if __name__ == '__main__':
             if pepy_downloads_badge is None:
                 pepy_downloads_badge = str('https://pepy.tech/badge/' + package)
             if pepy_downloads_target is None:
-                pepy_downloads_target = str('https://pepy.tech/project' + package + '?branch=master')
+                pepy_downloads_target = str('https://pepy.tech/project/' + package + '?branch=master')
 
             if syntek_package_heath_badge is None:
                 syntek_package_heath_badge = str('https://snyk.io/advisor/python/' + package + '/badge.svg')

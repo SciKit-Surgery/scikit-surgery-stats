@@ -7,21 +7,17 @@ import os.path
 import urllib.request
 import subprocess
 import json
+import re
 from datetime import datetime
 import sksurgerystats.from_pypi as skspypi
 from sksurgerystats.from_github import get_github_stats
 from sksurgerystats.common import add_packages, update_package_information, \
-        get_package_information
+        get_package_information, get_list_of_packages
 
 if __name__ == '__main__':
     all_packages = os.listdir('libraries/')
-    packages = []
-    for package in all_packages:
-        if not os.path.isdir('libraries/' + package) and not \
-                package.endswith(".txt") and not \
-                package.startswith("."):
-            packages.append(package)
-    
+    packages = get_list_of_packages(all_packages)
+
     package_dictionaries = []
     for package in packages:
         package_dictionaries.append(skspypi.get_json_from_pypi(package))

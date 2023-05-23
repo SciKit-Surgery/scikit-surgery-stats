@@ -39,12 +39,12 @@ def get_last_commit(project_name, token = None):
 
     return last_commit
 
-
 def get_token():
     """ Get github personal access token. This function checks if the environment variable 
         added as secret.ADMIN_TOKEN exists (ex. inside a GHA) or a local github.token
         file exists, and returns whichever token exists.
     """
+
     if os.environ.get('admin_token') is not None:
         token = os.environ.get('admin_token')
     else:
