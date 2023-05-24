@@ -21,7 +21,9 @@ jobs:
         with:
           python-version: '3.10'
           cache: 'pip' # caching pip dependencies  
-      - run: pip install -r requirements.txt
+      - run: |
+             pip install -r requirements.txt 
+             python3 -m pip install --upgrade urllib3==1.26.16
       
       - name: Analysis pipeline using personal token
         run: |
