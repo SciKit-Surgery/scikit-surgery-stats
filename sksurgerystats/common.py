@@ -5,6 +5,7 @@ gets some statistics for them
 
 import os.path
 import urllib.request
+import requests
 import subprocess
 import json
 import re
@@ -126,4 +127,24 @@ def get_packages(sort_key = None, path = 'libraries/',
     return packages
 
 
-
+def update_badge_links(badge_name, link_with_placeholder):
+    """
+    Updates the badge information for all packages, ie if link for given package needs to be corrected, or a new badge needs to be added
+    badge_name = name of badge, refer to get_badges.py for correct naming, ex. pepy_downloads_target
+    link_with_placeholder = html link for the given badge, use a placeholder "packagename" str
+    instead of the library's name in given path, ex. 'https://pepy.tech/packagename?branch=master'
+    """
+    all_packages = os.listdir('libraries/')
+    packages = get_list_of_packages(all_packages)
+    
+    for package in packages:
+        print("Updating badge " + badge_name + "for ", package)
+        badge = get_package_information(package, badge_name)
+        homepage = get_package_information(package, 'home_page')
+    
+        badge = link_with_placeholder.replace("packagename", package)
+        req=requests.get(badge)
+        if req.status_code == 200:
+            update_package_information(package, badge_name, badge, overwrite = True)
+            
+        
