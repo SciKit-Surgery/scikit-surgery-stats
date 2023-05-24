@@ -13,10 +13,13 @@ jobs:
     concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout 🛎️
         uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
+      - run: 
+          git pull origin ${GITHUB_REF##*/}
 
       - name: Set environment
         uses: actions/setup-python@v4
