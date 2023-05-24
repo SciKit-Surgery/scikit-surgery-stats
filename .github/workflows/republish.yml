@@ -19,7 +19,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
       - run: 
-          git pull origin ${GITHUB_REF##*/}
+          git pull origin ${{ github.head_ref }}
 
       - name: Set environment
         uses: actions/setup-python@v4
