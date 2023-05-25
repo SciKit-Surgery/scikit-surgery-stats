@@ -31,7 +31,7 @@ jobs:
       - name: Regenerate Dashboard 🚀
         run: |
              echo "start pipeline"
-             echo ${{ github.head_ref }}
+             echo ${{ github.ref }}
              python get_pypi_repos.py
              echo "step 1 done"
              python get_github_repos.py
@@ -56,7 +56,7 @@ jobs:
              git add html
              git add libraries
              git commit -m "Newly produced dashboard and library files" -a
-             git push -u origin gh-pages 
+             git push -u origin ${{ github.head_ref }}
              SHA=$(git rev-parse HEAD)
       
       - name: Checkout the html files 🛎️
