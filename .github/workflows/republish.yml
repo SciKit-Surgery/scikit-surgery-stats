@@ -56,7 +56,7 @@ jobs:
              git add html
              git add libraries
              git commit -m "Newly produced dashboard and library files" -a
-             git push -u refs/heads/gh-pages 
+             git push -u origin gh-pages 
              SHA=$(git rev-parse HEAD)
       
       - name: Checkout the html files 🛎️
