@@ -46,11 +46,28 @@ jobs:
           #printf '%s\n' "$pat_token" > github.token
         env:
            admin_token: ${{ secrets.ADMIN_TOKEN }}
+      
+      - name: Commit the produced html files
+        id: commit
+        run: |
+             git config --local user.email "action@github.com"
+             git config --local user.name "github-actions"
+             git add html
+             git add libraries
+             git commit -m "Newly produced dashboard and library files" -a
+             git push -u origin gh-pages 
+             SHA=$(git rev-parse HEAD)
+      
+      - name: Checkout the html files 🛎️
+        uses: actions/checkout@v3
+        with:
+            ref: $SHA
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: . # The folder the action should deploy.
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
 
 
