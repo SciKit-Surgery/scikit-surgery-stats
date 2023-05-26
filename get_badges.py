@@ -19,7 +19,7 @@ from sksurgerystats.common import add_packages, update_package_information, \
 if __name__ == '__main__':
     all_packages = os.listdir('libraries/')
     packages = get_list_of_packages(all_packages)
-
+    packages = ['scikit-surgeryultrasonix']
 
     for package in packages:
         
@@ -72,6 +72,7 @@ if __name__ == '__main__':
 
             if pepy_downloads_badge is None:
                 pepy_downloads_badge = str('https://pepy.tech/badge/' + package)
+            #always update this 
             if pepy_downloads_target is None:
                 pepy_downloads_target = str('https://pepy.tech/project/' + package + '/?branch=master')
 
@@ -148,7 +149,7 @@ if __name__ == '__main__':
                         overwrite = True)
         
         if pepy_downloads_target is not None:
-            req=requests.get(pepy_downloads_badge)
+            req=requests.get(pepy_downloads_target)
             if req.status_code == 200:
                 update_package_information(package, 'pepy_downloads_target', pepy_downloads_target,
                         overwrite = True)
