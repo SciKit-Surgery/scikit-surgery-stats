@@ -13,19 +13,25 @@ jobs:
     concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
     runs-on: ubuntu-latest
     steps:
+
       - name: Checkout 🛎️
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Set environment
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
           cache: 'pip' # caching pip dependencies  
-      - run: pip install -r requirements.txt
+      - run: |
+             pip install -r requirements.txt 
+             python3 -m pip install --upgrade urllib3==1.26.16
       
-      - name: Analysis pipeline using personal token
+      - name: Regenerate Dashboard 🚀
         run: |
              echo "start pipeline"
+             echo ${{ github.ref }}
              python get_pypi_repos.py
              echo "step 1 done"
              python get_github_repos.py
@@ -36,18 +42,17 @@ jobs:
              echo "step 4 done"
              python get_badges.py
              echo "step 5 done"
+             python update_dashboard.py
           #admin_token= python update_github_stats.py
           #printf '%s\n' "$pat_token" > github.token
         env:
            admin_token: ${{ secrets.ADMIN_TOKEN }}
-      
-      - name: Regenerate Dashboard 🚀
-        run: python update_dashboard.py
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: . # The folder the action should deploy.
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
 
 
