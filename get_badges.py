@@ -1,6 +1,7 @@
 """
 Searches for packages on pypi with SciKit-Surgery in the name, then 
 gets some statistics for them
+
 """
 import requests
 import os.path
@@ -11,7 +12,9 @@ from datetime import datetime
 import sksurgerystats.from_pypi as skspypi
 from sksurgerystats.from_github import get_github_stats
 from sksurgerystats.common import add_packages, update_package_information, \
-        get_package_information, get_list_of_packages
+        get_package_information, get_list_of_packages 
+
+
 
 if __name__ == '__main__':
     all_packages = os.listdir('libraries/')
@@ -69,8 +72,7 @@ if __name__ == '__main__':
 
             if pepy_downloads_badge is None:
                 pepy_downloads_badge = str('https://pepy.tech/badge/' + package)
-            if pepy_downloads_target is None:
-                pepy_downloads_target = str('https://pepy.tech/project/' + package + '/' + '?branch=master')
+            pepy_downloads_target = str('https://pepy.tech/project/' + package + '/?branch=master')
 
             if syntek_package_heath_badge is None:
                 syntek_package_heath_badge = str('https://snyk.io/advisor/python/' + package + '/badge.svg')
@@ -156,7 +158,7 @@ if __name__ == '__main__':
             if req.status_code == 200:
                 update_package_information(package, 'syntek_package_heath_badge', syntek_package_heath_badge,
                         overwrite = True)
-        
+    
         if syntek_package_heath_target is not None:
             req=requests.get(syntek_package_heath_target)
             if req.status_code == 200:
