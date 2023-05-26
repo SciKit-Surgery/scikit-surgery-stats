@@ -72,7 +72,8 @@ if __name__ == '__main__':
 
             if pepy_downloads_badge is None:
                 pepy_downloads_badge = str('https://pepy.tech/badge/' + package)
-            pepy_downloads_target = str('https://pepy.tech/project/' + package + '/?branch=master')
+            if pepy_downloads_target is None:
+                pepy_downloads_target = str('https://pepy.tech/project/' + package + '/?branch=master')
 
             if syntek_package_heath_badge is None:
                 syntek_package_heath_badge = str('https://snyk.io/advisor/python/' + package + '/badge.svg')
