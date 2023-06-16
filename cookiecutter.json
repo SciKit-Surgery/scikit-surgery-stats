@@ -7,5 +7,6 @@
   "base_library_name": "scikit-surgery",
   "project_short_description": "A cookieninja template with ARC recommendations.",
   "funder": "JBFC: The Joe Bloggs Funding Council",
-  "licence": ["MIT", "BSD-3", "GPL-3.0"]
+  "licence": ["MIT", "BSD-3", "GPL-3.0"],
+  "_copy_without_render": [".github/*"]
 }
