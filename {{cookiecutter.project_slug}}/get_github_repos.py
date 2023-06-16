@@ -8,6 +8,8 @@ token = get_token()
 
 if token is not None:
     g = Github(token)
-    reps = g.search_repositories(query="scikit-surgery in:name")
+    reps = g.search_repositories(
+        query="{} in:name".format("{{ cookiecutter.base_library_name }}")
+    )
     for rep in reps:
         add_github_package(rep)

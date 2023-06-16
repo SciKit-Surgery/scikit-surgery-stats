@@ -7,5 +7,7 @@ import sksurgerystats.from_pypi as skspypi
 from sksurgerystats.common import add_packages
 
 if __name__ == "__main__":
-    new_packages = skspypi.find_new_pypi_packages("scikit-surgery")
+    new_packages = skspypi.find_new_pypi_packages(
+        "{{ cookiecutter.base_library_name }}"
+    )
     add_packages(new_packages)
