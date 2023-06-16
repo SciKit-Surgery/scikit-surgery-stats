@@ -1,4 +1,6 @@
 """
+Get package information
+
 Searches for packages on pypi with SciKit-Surgery in the name, then
 gets some statistics for them.
 
@@ -17,7 +19,6 @@ from sksurgerystats.common import (
 if __name__ == "__main__":
     all_packages = os.listdir("libraries/")
     packages = get_list_of_packages(all_packages)
-    packages = ["scikit-surgeryultrasonix"]
 
     for package in packages:
         print("Getting badges for ", package)
