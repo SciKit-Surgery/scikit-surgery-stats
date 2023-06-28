@@ -25,6 +25,7 @@ if __name__ == "__main__":
 
     package_dictionaries = []  # type: list[str]
     for package in packages:
+        print("Updating package information for " + package)
         homepage = get_package_information(package, "home_page")
 
         if homepage is not None:
