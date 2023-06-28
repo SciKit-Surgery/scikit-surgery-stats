@@ -9,6 +9,7 @@ import contextlib
 import os.path
 
 import requests
+from requests.exceptions import SSLError
 
 from sksurgerystats.common import (
     get_list_of_packages,
@@ -149,10 +150,15 @@ if __name__ == "__main__":
 
         if docs_badge is not None:
             try:
-                req = requests.get(docs_badge)
-            except:
-                req = requests.get(docs_badge, verify=False)
-                # This conditional protects against some of the certificate errors we got with especially excluded libraries
+                try:
+                    req = requests.get(docs_badge)
+                except:
+                    req = requests.get(docs_badge, verify=False)
+                    # This conditional protects against some of the certificate errors we got with especially excluded libraries
+            except SSLError as e:
+                print("SSL version or cipher mismatch error occurred:", e)
+                # Handle the error or continue with other operations
+                pass
 
             if req.status_code == 200:
                 update_package_information(
@@ -164,10 +170,15 @@ if __name__ == "__main__":
 
         if docs_target is not None:
             try:
-                req = requests.get(docs_target)
-            except:
-                req = requests.get(docs_target, verify=False)
-                # This conditional protects against some of the certificate errors we got with especially excluded libraries
+                try:
+                    req = requests.get(docs_target)
+                except:
+                    req = requests.get(docs_target, verify=False)
+                    # This conditional protects against some of the certificate errors we got with especially excluded libraries
+            except SSLError as e:
+                print("SSL version or cipher mismatch error occurred:", e)
+                # Handle the error or continue with other operations
+                pass
             if req.status_code == 200:
                 update_package_information(
                     package,
