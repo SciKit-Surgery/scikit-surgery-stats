@@ -28,8 +28,8 @@ if __name__ == "__main__":
         packages = get_packages(sort_key="First Release Date")
 
         for count, package in enumerate(packages):
-            first_release = get_package_information(package, "First Release Date")
-            last_release = get_package_information(package, "Last Release Date")
+            first_release = get_package_information(package, "Created Date")
+            last_release = get_package_information(package, "Last Update")
             stars = get_package_information(package, "GitHub Stars")
             forks = get_package_information(package, "GitHub Forks")
             watchers = get_package_information(package, "GitHub Watchers")
@@ -96,7 +96,7 @@ if __name__ == "__main__":
 
             weeks_up = 0
             try:
-                time_up = datetime.now() - datetime.fromisoformat(first_release)
+                time_up = datetime.now() - datetime.fromisoformat(str(first_release))
                 weeks_up = int(time_up.days / 7)
             except ValueError:
                 pass

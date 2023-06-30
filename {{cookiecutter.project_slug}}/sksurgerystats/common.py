@@ -83,7 +83,7 @@ def update_package_information(package, key, entry, overwrite=False, path="libra
             configuration[key] = entry
 
     with open(filename, "w") as fileout:
-        configuration = json.dump(configuration, fileout)
+        configuration = json.dump(configuration, fileout, default=str)
 
 
 def get_package_information(package, key, path="libraries/"):
@@ -117,16 +117,25 @@ def get_packages(
 
     package_dictionaries = []
     for package in packages:
-        package_dictionaries.append(
-            {
-                "package": package,
-                "sort key": get_package_information(package, sort_key, path),
-            }
-        )
-        if get_package_information(package, sort_key, path) is None:
-            print(package + " sort key is None ", sort_key)
-
-    sorted_dicts = sorted(package_dictionaries, key=lambda k: k["sort key"])
+        sort_key_return = get_package_information(package, sort_key, path)
+        if sort_key_return == None:
+            print(
+                "Not able to fetch necessary information on package "
+                + package
+                + ", omitting from dashboard."
+            )
+        else:
+            package_dictionaries.append(
+                {
+                    "package": package,
+                    "sort key": get_package_information(package, sort_key, path),
+                }
+            )
+    # now that Created Date is the sort key, we need to convert it to str() to use in key. Also we set reverse to True so on top of the list
+    # we get the package that is the latest created
+    sorted_dicts = sorted(
+        package_dictionaries, key=lambda k: str(k["sort key"]), reverse=True
+    )
 
     packages = []
     for sorted_dict in sorted_dicts:

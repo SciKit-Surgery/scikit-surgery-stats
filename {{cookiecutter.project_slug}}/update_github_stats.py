@@ -29,11 +29,25 @@ if __name__ == "__main__":
         homepage = get_package_information(package, "home_page")
 
         if homepage is not None:
-            rep, stars, watchers, forks, contributors = get_github_stats(
+            (
+                rep,
+                stars,
+                watchers,
+                forks,
+                contributors,
+                create_date,
+                last_update_date,
+            ) = get_github_stats(
                 homepage,
                 token,
             )
 
+            update_package_information(
+                package, "Created Date", create_date, overwrite=True
+            )
+            update_package_information(
+                package, "Last Update", last_update_date, overwrite=True
+            )
             update_package_information(package, "GitHub Stars", stars, overwrite=True)
             update_package_information(
                 package,
