@@ -10,6 +10,7 @@ import os.path
 
 import requests
 from requests.exceptions import SSLError
+import json
 
 from sksurgerystats.common import (
     get_list_of_packages,
@@ -20,6 +21,16 @@ from sksurgerystats.common import (
 if __name__ == "__main__":
     all_packages = os.listdir("libraries/")
     packages = get_list_of_packages(all_packages)
+
+    badges = {
+        "total": 0,
+        "ci_badge": 0,
+        "coverage_badge": 0,
+        "docs_badge": 0,
+        "codeclimate_badge": 0,
+        "pepy_downloads_badge": 0,
+        "syntek_package_heath_badge": 0,
+    }
 
     for package in packages:
         print("Getting badges for ", package)
@@ -49,6 +60,7 @@ if __name__ == "__main__":
         if homepage is not None:
             project_name = homepage
             split_name = project_name.split("/")
+            badges["total"] += 1
             with contextlib.suppress(IndexError):
                 project_name = split_name[-2] + "/" + split_name[-1]
 
@@ -110,6 +122,7 @@ if __name__ == "__main__":
         if ci_badge is not None:
             req = requests.get(ci_badge)
             if req.status_code == 200:
+                badges["ci_badge"] = badges["ci_badge"] + 1
                 update_package_information(
                     package,
                     "ci_badge",
@@ -131,6 +144,7 @@ if __name__ == "__main__":
         if coverage_badge is not None:
             req = requests.get(coverage_badge)
             if req.status_code == 200:
+                badges["coverage_badge"] = badges["coverage_badge"] + 1
                 update_package_information(
                     package,
                     "coverage_badge",
@@ -161,6 +175,7 @@ if __name__ == "__main__":
                 pass
 
             if req.status_code == 200:
+                badges["docs_badge"] += 1
                 update_package_information(
                     package,
                     "docs_badge",
@@ -168,13 +183,13 @@ if __name__ == "__main__":
                     overwrite=False,
                 )
 
+        # This conditional protects against some of the certificate errors we got with especially excluded libraries
         if docs_target is not None:
             try:
                 try:
                     req = requests.get(docs_target)
                 except:
                     req = requests.get(docs_target, verify=False)
-                    # This conditional protects against some of the certificate errors we got with especially excluded libraries
             except SSLError as e:
                 print("SSL version or cipher mismatch error occurred:", e)
                 # Handle the error or continue with other operations
@@ -191,6 +206,7 @@ if __name__ == "__main__":
         if codeclimate_badge is not None:
             req = requests.get(codeclimate_badge)
             if req.status_code == 200:
+                badges["codeclimate_badge"] += 1
                 update_package_information(
                     package,
                     "codeclimate_badge",
@@ -212,6 +228,7 @@ if __name__ == "__main__":
         if pepy_downloads_badge is not None:
             req = requests.get(pepy_downloads_badge)
             if req.status_code == 200:
+                badges["pepy_downloads_badge"] += 1
                 update_package_information(
                     package,
                     "pepy_downloads_badge",
@@ -233,6 +250,7 @@ if __name__ == "__main__":
         if syntek_package_heath_badge is not None:
             req = requests.get(syntek_package_heath_badge)
             if req.status_code == 200:
+                badges["syntek_package_heath_badge"] += 1
                 update_package_information(
                     package,
                     "syntek_package_heath_badge",
@@ -249,3 +267,6 @@ if __name__ == "__main__":
                     syntek_package_heath_target,
                     overwrite=True,
                 )
+
+    with open("libraries/available_badges.json", "w") as fileout:
+        json.dump(badges, fileout, default=str)
