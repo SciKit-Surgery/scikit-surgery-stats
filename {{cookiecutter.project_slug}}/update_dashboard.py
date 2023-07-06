@@ -9,13 +9,47 @@ from datetime import datetime
 from sksurgerystats.common import (
     get_package_information,
     get_packages,
+    check_available_badges,
 )
-from sksurgerystats.html import WriteCellWithLinkedImage
+from sksurgerystats.html import WriteCellWithLinkedImage, adjustHeaders
 
 if __name__ == "__main__":
     head = ""
+
     with open("html/dashboard.html.in.head") as filein:
         head = filein.read()
+        metric_dictionary = {
+            "created_date": "Total Weeks Up",
+            "last_update_date": "Latest Update",
+            "ci_badge": "CI Status",
+            "docs_badge": "Docs",
+            "coverage_badge": "Coverage",
+            "pepy_downloads_badge": "Downloads with Mirror",
+            "lines_of_code": "Lines of Code",
+            "stars": "Stars",
+            "forks": "Forks",
+            "watchers": "Watchers",
+            "contributors": "Contributors",
+            "syntek_package_health_badge": "Package Health",
+            "codeclimate_badge": "Maintainability",
+        }
+        available_metrics = [
+            "Total Weeks Up",
+            "Latest Update",
+            "Lines of Code",
+            "Stars",
+            "Forks",
+            "Watchers",
+            "Contributors",
+        ]
+        available_badges = check_available_badges()
+        available_metrics.extend(
+            [
+                metric_dictionary[available_badges[i]]
+                for i in range(len(available_badges))
+            ]
+        )
+        head = adjustHeaders(head, available_metrics)
 
     tail = ""
     with open("html/dashboard.html.in.tail") as filein:

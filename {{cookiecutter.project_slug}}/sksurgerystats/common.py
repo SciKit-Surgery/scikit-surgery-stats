@@ -14,6 +14,26 @@ from datetime import datetime
 # packages = os.system('./pypi-simple-search scikit-surgery')
 
 
+def check_available_badges(path="libraries/", inclusion_policy=0.5):
+    """ """
+    filename = str(path + "available_badges.json")
+    available_badges = []
+    checked_badges = []
+    with open(filename, "r") as filein:
+        try:
+            available_badges = json.load(filein)
+        except json.JSONDecodeError:
+            available_badges = {}
+
+    for badge in available_badges.keys():
+        if badge != "total":
+            badge_availability = available_badges[badge] / available_badges["total"]
+            if badge_availability >= inclusion_policy:
+                checked_badges.append(badge)
+
+    return checked_badges
+
+
 def get_list_of_packages(all_packages, path="libraries/"):
     """
     For the given list, filter for the actual list of available packages with:
