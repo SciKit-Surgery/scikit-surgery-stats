@@ -49,11 +49,9 @@ it includes the Github Action that deploys the produced html files to the `gh-pa
 
     .. code-block::
 
-            full_name [scikit-surgery]:
-            email [temp@gmail.com]:
-            github_username []:
-            project_name [Python Template]:
-            project_slug [python-template]:
+            author_name [John Smith]:
+            author_email [temp@gmail.com]:
+            project_name [Community Dashboard]:
             base_library_name [scikit-surgery]:
             project_short_description [A dashboard template from scikit-surgery]:
             funder [JBFC: The Joe Bloggs Funding Council]:
@@ -68,7 +66,6 @@ Note that these project variables are defined in the `cookiecutter.json` file.
 
     .. code-block::
 
-        project_slug : astropy-dashboard
         project_name : Astropy Community Dashboard
         base_library_name : astropy
 
@@ -134,24 +131,28 @@ Note that these project variables are defined in the `cookiecutter.json` file.
 
 5. To run the pipeline, you first need to install the dependencies using the `requirements.txt` file installed via step 3
 
+    .. code-block::
         mkdir env
         python -m venv env/
         source env/bin/activate
         pip install -r requirements.txt
 
-6. To run the analysis scripts, test locally, you need a personal access token for Github API generated from [here](https://github.com/settings/personal-access-tokens/new)
-Save it in the base directory under a text file named `github.token`
+6. To run the analysis scripts, test locally, you need a personal access token for Github API generated from `here <https://github.com/settings/personal-access-tokens/new>`__
+
++ Save it in the base directory under a text file named `github.token`
 
 7. Few [optional] things to set before you can run the pipeline!
 
     a. You can specify a list for the libraries you want to exclude from your dashboard deployment, under `libraries/exclusions`
-        Similar to `libraries` folder, it has a dict entry for each package, such as in this example from `scikit-surgery`:
+
+        Similar to `libraries` folder, this (as shown below) has a dict entry for each package, such as in this example from `scikit-surgery`:
             | libraries/exclusions
             | ├── scikit-surgeryoverlay
             | ├── scikit-surgerytorsosimulator
             | └── scikit-surgeryvideoutils
 
-        Each file entry is a `.json` file that has an `obsolete` key and a value that is a sentence describing why they are obsolete, such as:
+        Each file entry (ex. scikit-surgeryoverlay) is a `.json` file that has :
+        an `obsolete` key and a value that is a sentence describing why they are obsolete, such as:
         ```{"obsolete" : "Became <a href='https://github.com/UCL/scikit-surgeryvtk'>sikit-surgeryvtk.</a>"}```
 
     b. You can save the logo of your base package (a .svg file) under `assets/logo-dashboard.svg` for it to show up in your deployment header
@@ -159,8 +160,8 @@ Save it in the base directory under a text file named `github.token`
 8. ESSENTIAL: Github Configurations
     a. You need to initialise github pages in your repository and set the deployment source from branch `gh-pages` :
         Github Action will automatically initialise this branch and deploy from
-        here. You can find the instructions here_
-        _here: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+        here. You can find the instructions
+        `here <https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site>`__
 
         You might need admin rights from your organisation to use your organisation's base name. You can also use your username as the domain.
 
@@ -171,7 +172,7 @@ Save it in the base directory under a text file named `github.token`
    :alt: Configuration
 
 b. You need a secret personal token to use the github API in the Github Action workflow, saved as `secrets.ADMIN_TOKEN`. For this you
-will need admin rights in your organisation and repository. You can read more on secret Github tokens [here](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
+will need admin rights in your organisation and repository. You can read more on secret Github tokens `here <https://docs.github.com/en/actions/security-guides/encrypted-secrets`__
 
     1. Go to the Settings
     2. Go to Security -> Actions -> Repository secrets
