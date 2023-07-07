@@ -59,44 +59,27 @@ if __name__ == "__main__":
         fileout.write(head)
 
         all_packages = os.listdir("libraries/")
-        packages = get_packages(sort_key="First Release Date")
+        packages = get_packages(sort_key="Created Date")
 
         for count, package in enumerate(packages):
             first_release = get_package_information(package, "Created Date")
-            last_release = get_package_information(package, "Last Update")
+            last_update_date = get_package_information(package, "Last Update")
             stars = get_package_information(package, "GitHub Stars")
             forks = get_package_information(package, "GitHub Forks")
             watchers = get_package_information(package, "GitHub Watchers")
             contributors = get_package_information(package, "GitHub Contributors")
-            ci_badge = get_package_information(package, "ci_badge")
-            ci_target = get_package_information(package, "ci_target")
-            coverage_badge = get_package_information(package, "coverage_badge")
-            coverage_target = get_package_information(package, "coverage_target")
-            docs_badge = get_package_information(package, "docs_badge")
-            docs_target = get_package_information(package, "docs_target")
-            codeclimate_badge = get_package_information(package, "codeclimate_badge")
-            codeclimate_target = get_package_information(package, "codeclimate_target")
-            pepy_downloads_badge = get_package_information(
-                package,
-                "pepy_downloads_badge",
-            )
-            pepy_downloads_target = get_package_information(
-                package,
-                "pepy_downloads_target",
-            )
-            syntek_package_health_badge = get_package_information(
-                package,
-                "syntek_package_heath_badge",
-            )
-            syntek_package_health_target = get_package_information(
-                package,
-                "syntek_package_heath_target",
-            )
             lines_of_code = get_package_information(package, "loc")
-
             homepage = get_package_information(package, "home_page")
             if homepage is None:
                 homepage = "Not Found"
+
+            badges_dictionary = dict()
+            for badge in available_badges:
+                badge_link = badge.replace("badge", "target")
+                badges_dictionary[badge] = [
+                    get_package_information(package, badge),
+                    get_package_information(package, badge_link),
+                ]
 
             fileout.write("  <tr>\n")
 
@@ -152,31 +135,23 @@ if __name__ == "__main__":
                 "Total Weeks Up",
             )
 
-            last_release_badge = None
-            last_release_target = None
-            if last_release != "n/a":
-                last_release_badge = str(
-                    "https://img.shields.io/badge/Last%20Release-"
-                    + str(last_release).split("T")[0].replace("-", "%20")
-                    + "-green?style=flat",
-                )
-                last_release_target = str(homepage + "/releases")
+            # LAST UPDATE TODO
+            # last_release_badge = None
+            # last_release_target = None
+            # if last_update_date != "n/a":
+            #    last_release_badge = str(
+            #        "https://img.shields.io/badge/Last%20Release-"
+            #        + str(last_update_date).split("T")[0].replace("-", "%20")
+            #    )
+            #        + "-green?style=flat",
+            #    last_release_target = str(homepage + "/releases")
 
-            WriteCellWithLinkedImage(
-                fileout,
-                last_release_badge,
-                last_release_target,
-                "Last Release Date",
-            )
-
-            WriteCellWithLinkedImage(fileout, ci_badge, ci_target, "CI Status")
-            WriteCellWithLinkedImage(fileout, docs_badge, docs_target, "Docs Status")
-            WriteCellWithLinkedImage(
-                fileout,
-                coverage_badge,
-                coverage_target,
-                "Code Coverage",
-            )
+            # WriteCellWithLinkedImage(
+            #    fileout,
+            #    last_release_badge,
+            #    last_release_target,
+            #    "Last Release Date",
+            # )
 
             loc_badge = None
             loc_link = str("loc/" + package + ".html")
@@ -189,12 +164,12 @@ if __name__ == "__main__":
 
             WriteCellWithLinkedImage(fileout, loc_badge, loc_link, "Lines of Code")
 
-            WriteCellWithLinkedImage(
-                fileout,
-                pepy_downloads_badge,
-                pepy_downloads_target,
-                "All Downloads from PePy",
-            )
+            # write the badges to the HTMLs
+            for badge in badges_dictionary:
+                description = metric_dictionary[badge]
+                WriteCellWithLinkedImage(
+                    fileout, badge, badges_dictionary[badge][0], description
+                )
 
             github_user = get_package_information(package, "GitHub User")
             stars_badge = None
@@ -255,20 +230,6 @@ if __name__ == "__main__":
                 contrib_badge,
                 str(homepage + "/graphs/contributors"),
                 "GitHub Contributors",
-            )
-
-            WriteCellWithLinkedImage(
-                fileout,
-                syntek_package_health_badge,
-                syntek_package_health_target,
-                "SynTek Package Health",
-            )
-
-            WriteCellWithLinkedImage(
-                fileout,
-                codeclimate_badge,
-                codeclimate_target,
-                "SynTek Package Health",
             )
 
             fileout.write("  </tr>\n")
