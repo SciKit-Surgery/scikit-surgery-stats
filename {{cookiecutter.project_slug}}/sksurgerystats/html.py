@@ -18,27 +18,33 @@ def adjustHeaders(head, available_badges):
     # Split the table head into individual table headers
     table_headers = table_head.split("<th")
 
-    # Adjust the width and filter out unwanted table headers
-    updated_table_headers = []
-    for header in table_headers:
-        if (
-            any(keyword in header for keyword in available_badges)
-            and header != "Library"
-        ):
+    # Prepare the updated table head with the initial header format
+    updated_table_head = '<th style="width:0.1">\n<p>Library</p>\n</th>'
+
+    # Adjust the width and add the remaining valid table headers
+    for header in table_headers[1:]:  # Skip the initial header
+        header_start_index = header.find("<p>") + len("<p>")
+        header_end_index = header.find("</p>", header_start_index)
+        keyword = header[header_start_index:header_end_index]
+
+        if keyword in available_badges:
             # Adjust the width by dividing it by the number of available badges
             width_index = header.find('style="width:') + len('style="width:')
             width_end_index = header.find('">', width_index)
             width = float(header[width_index:width_end_index])
             width /= len(available_badges)
-            header = header[:width_index] + str(width) + header[width_end_index:]
 
-            updated_table_headers.append(header)
+            # Build the updated header string with adjusted width
+            updated_header = f'<th style="width:{width}">\n<p>{keyword}</p>\n</th>'
+            updated_table_head += updated_header
 
-    # Combine the updated table headers back into a single string
-    updated_table_head = "<th".join(updated_table_headers)
+    # Combine the updated table head with the initial header and additional tags
+    updated_head = (
+        f"{opening_tag}\n  <thead>\n    <tr>\n{updated_table_head}</tr>\n  </thead>\n"
+    )
 
     # Replace the original table head with the updated version
-    updated_head = head[:start_index] + updated_table_head + head[end_index:]
+    updated_head += head[end_index:]
 
     return updated_head
 
