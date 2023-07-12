@@ -5,6 +5,7 @@ gets some statistics for them.
 import os.path
 import shutil
 import subprocess
+from github import Github, GithubException
 
 from sksurgerystats.common import (
     get_package_information,
@@ -29,33 +30,39 @@ if __name__ == "__main__":
     shutil.rmtree(temp_dir, ignore_errors=True)
 
     for package in packages:
-        print("Counting lines of ", package)
+        try:
+            homepage = get_package_information(package, "home_page")
+        except:
+            continue
 
-        homepage = get_package_information(package, "home_page")
+        print("Counting lines of ", package)
 
         cache_file = str("libraries/lines_of_code/" + package + ".js")
         html_file = str("loc/" + package + ".html")
         if not os.path.exists(cache_file):
-            continue
+            with open(cache_file, "w") as my_empty_loc_file:
+                # now you have an empty file already
+                pass
         git_hashes = load_cache_file(cache_file)
-        last_hash = (
-            git_hashes if isinstance(git_hashes, str) else list(git_hashes.keys())[-1]
-        )
+        last_hash = git_hashes if isinstance(git_hashes, str) else None
 
         if not os.path.exists(temp_dir):
             os.mkdir(temp_dir)
         if homepage is not None:
+            if get_last_commit(homepage, token) in git_hashes:
+                print("No need to update ", package, " skipping")
+                continue
             try:
-                last_hash = get_last_commit(homepage, token)
-                if get_last_commit(homepage, token) in git_hashes:
-                    print("No need to update ", package, " skipping")
-                    continue
-            except:
                 subprocess.run(["git", "clone", "--depth", "1", homepage, temp_dir])
-                last_loc = get_loc(last_hash, temp_dir)
+                last_loc, last_hash = get_loc(
+                    last_hash, temp_dir
+                )  # we also return an updated last_hash if it was empty earlier
                 update_package_information(package, "loc", last_loc, overwrite=True)
                 write_to_js_file(last_hash, cache_file)
                 make_html_file(package, cache_file)
+                shutil.rmtree(temp_dir, ignore_errors=True)
+            except:
+                print(package, "  is not available")
                 shutil.rmtree(temp_dir, ignore_errors=True)
         else:
             print(package, " has no homepage")

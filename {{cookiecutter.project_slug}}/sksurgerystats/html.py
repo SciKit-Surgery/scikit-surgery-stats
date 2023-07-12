@@ -56,6 +56,9 @@ def load_cache_file(filename):
     ret_dict = {}
     try:
         with open(filename, "r") as filein:
+            # If there is a file but there are no hash entries inside i.e. the first time this functionality is run
+            if len(filein.read()) == 0 or len(filein.read().split("=")) == 1:
+                return ret_dict
             try:
                 jsontext = filein.read().split("=")[1]
                 ret_dict = json.loads(jsontext)

@@ -10,6 +10,12 @@ def get_loc(githash, directory="./"):
     """
     current_dir = os.getcwd()
     os.chdir(directory)
+    if githash == None:
+        githash = subprocess.run(
+            ["git", "log", "-n 1", '--pretty=format:"%H"'],
+            capture_output=True,
+            text=True,
+        ).stdout[1:-1]
     loc = subprocess.run(["cloc", githash, "--quiet"], capture_output=True).stdout
 
     total = 0
@@ -19,7 +25,7 @@ def get_loc(githash, directory="./"):
         pass
 
     os.chdir(current_dir)
-    return total
+    return total, githash
 
 
 def get_last_commit(project_name, token=None):
@@ -33,9 +39,17 @@ def get_last_commit(project_name, token=None):
     except IndexError:
         pass
 
-    rep = github.get_repo(project_name)
-    default_branch = rep.get_branch(rep.default_branch)
-    last_commit = default_branch.commit.sha[0:7]
+    try:
+        rep = github.get_repo(project_name)
+    except:
+        print("repository not found for " + project_name)
+        return None
+    try:
+        default_branch = rep.get_branch(rep.default_branch)
+        last_commit = default_branch.commit.sha[0:7]
+    except:
+        print("Default branch is empty")
+        last_commit = None
 
     return last_commit
 
