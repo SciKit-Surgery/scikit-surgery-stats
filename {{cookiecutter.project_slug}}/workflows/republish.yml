@@ -37,6 +37,8 @@ jobs:
           echo "step 4 done"
           python get_badges.py
           echo "step 5 done"
+          python get_loc.py
+          echo "step 6 done"
         env:
           admin_token: ${{ ' -}} secrets.ADMIN_TOKEN }}
 

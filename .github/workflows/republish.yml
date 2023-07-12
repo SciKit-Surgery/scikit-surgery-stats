@@ -1,16 +1,15 @@
 name: Republish
 
-on:  
-  pull_request: #same workflow is triggered on PRs and on a schedule 
+on:
+  pull_request: #same workflow is triggered on PRs and on a schedule
   schedule:
-    - cron: '0 */12 * * *'  # Redeploy the dashboard every 12 hours 
+    - cron: "0 */12 * * *" # Redeploy the dashboard every 12 hours
 
 jobs:
   build-and-deploy:
     concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
     runs-on: ubuntu-latest
     steps:
-
       - name: Checkout 🛎️
         uses: actions/checkout@v3
         with:
@@ -19,29 +18,31 @@ jobs:
       - name: Set environment
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
-          cache: 'pip' # caching pip dependencies  
+          python-version: "3.10"
+          cache: "pip" # caching pip dependencies
       - run: |
-             pip install -r requirements.txt 
-             python3 -m pip install --upgrade urllib3==1.26.16
-      
+          pip install -r requirements.txt
+          python3 -m pip install --upgrade urllib3==1.26.16
+
       - name: Regenerate Dashboard 🚀
         run: |
-             echo "start pipeline"
-             echo ${{ github.ref }}
-             python get_pypi_repos.py
-             echo "step 1 done"
-             python get_github_repos.py
-             echo "step 2 done"
-             python update_pypi_stats.py
-             echo "step 3 done"
-             python update_github_stats.py
-             echo "step 4 done"
-             python get_badges.py
-             echo "step 5 done"
+          echo "start pipeline"
+          echo ${{ github.ref }}
+          python get_pypi_repos.py
+          echo "step 1 done"
+          python get_github_repos.py
+          echo "step 2 done"
+          python update_pypi_stats.py
+          echo "step 3 done"
+          python update_github_stats.py
+          echo "step 4 done"
+          python get_badges.py
+          echo "step 5 done"
+          python get_loc.py
+          echo "step 6 done"
         env:
-           admin_token: ${{ secrets.ADMIN_TOKEN }}
-      
+          admin_token: ${{ secrets.ADMIN_TOKEN }}
+
       - name: Regenerate Dashboard 🚀
         run: python update_dashboard.py
 
@@ -50,6 +51,3 @@ jobs:
         with:
           folder: . # The folder the action should deploy.
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-
-
