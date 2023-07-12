@@ -64,11 +64,11 @@ if __name__ == "__main__":
         for count, package in enumerate(packages):
             first_release = get_package_information(package, "Created Date")
             last_update_date = get_package_information(package, "Last Update")
+            lines_of_code = get_package_information(package, "loc")
             stars = get_package_information(package, "GitHub Stars")
             forks = get_package_information(package, "GitHub Forks")
             watchers = get_package_information(package, "GitHub Watchers")
             contributors = get_package_information(package, "GitHub Contributors")
-            lines_of_code = get_package_information(package, "loc")
             homepage = get_package_information(package, "home_page")
             if homepage is None:
                 homepage = "Not Found"
@@ -154,7 +154,7 @@ if __name__ == "__main__":
             # )
 
             loc_badge = None
-            loc_link = str("loc/" + package + ".html")
+            loc_link = str("../loc/" + package + ".html")
             if lines_of_code is not None:
                 loc_badge = str(
                     "https://img.shields.io/badge/LOC-"
