@@ -34,7 +34,10 @@ if __name__ == "__main__":
     for package in packages:
         print("Counting lines of ", package)
 
-        homepage = get_package_information(package, "home_page")
+        try:
+            homepage = get_package_information(package, "home_page")
+        except:
+            continue
 
         cache_file = str("libraries/lines_of_code/" + package + ".js")
         html_file = str("loc/" + package + ".html")
@@ -43,9 +46,7 @@ if __name__ == "__main__":
                 # now you have an empty file already
                 pass
         git_hashes = load_cache_file(cache_file)
-        last_hash = (
-            git_hashes if isinstance(git_hashes, str) else list(git_hashes.keys())[-1]
-        )
+        last_hash = git_hashes if isinstance(git_hashes, str) else None
 
         if not os.path.exists(temp_dir):
             os.mkdir(temp_dir)
