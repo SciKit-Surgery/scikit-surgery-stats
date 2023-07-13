@@ -10,6 +10,12 @@ def get_loc(githash, directory="./"):
     """
     current_dir = os.getcwd()
     os.chdir(directory)
+    if githash == None:
+        githash = subprocess.run(
+            ["git", "log", "-n 1", '--pretty=format:"%H"'],
+            capture_output=True,
+            text=True,
+        ).stdout[1:-1]
     loc = subprocess.run(["cloc", githash, "--quiet"], capture_output=True).stdout
 
     total = 0
@@ -19,7 +25,7 @@ def get_loc(githash, directory="./"):
         pass
 
     os.chdir(current_dir)
-    return total
+    return total, githash
 
 
 def get_last_commit(project_name, token=None):
@@ -72,6 +78,8 @@ def get_github_stats(project_name, token=None):
     watchers = 0
     forks = 0
     contributors = 0
+    create_date = 0
+    last_update_date = 0
 
     split_name = project_name.split("/")
     try:
@@ -84,7 +92,7 @@ def get_github_stats(project_name, token=None):
     try:
         rep = github.get_repo(project_name)
     except GithubException:
-        return rep, stars, watchers, forks, contributors
+        return rep, stars, watchers, forks, contributors, create_date, last_update_date
     try:
         contributors = len(rep.get_stats_contributors())
     except:
@@ -93,5 +101,7 @@ def get_github_stats(project_name, token=None):
     stars = rep.stargazers_count
     watchers = rep.watchers_count
     forks = rep.forks_count
+    create_date = rep.created_at
+    last_update_date = rep.updated_at
 
-    return rep, stars, watchers, forks, contributors
+    return rep, stars, watchers, forks, contributors, create_date, last_update_date

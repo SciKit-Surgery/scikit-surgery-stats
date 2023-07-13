@@ -1,25 +1,23 @@
 """
 Searches for packages on pypi with SciKit-Surgery in the name, then
-gets some statistics for them
+gets some statistics for them.
 """
 import os.path
 import shutil
 import subprocess
-import subprocess
 from github import Github, GithubException
-from sksurgerystats.html import load_cache_file, make_html_file, write_to_js_file
-from sksurgerystats.from_github import (
-    get_github_stats,
-    get_token,
-    get_loc,
-    get_last_commit,
-)
+
 from sksurgerystats.common import (
-    update_package_information,
     get_package_information,
     get_packages,
+    update_package_information,
 )
-
+from sksurgerystats.from_github import (
+    get_last_commit,
+    get_loc,
+    get_token,
+)
+from sksurgerystats.html import load_cache_file, make_html_file, write_to_js_file
 
 if __name__ == "__main__":
     packages = get_packages()
@@ -32,12 +30,12 @@ if __name__ == "__main__":
     shutil.rmtree(temp_dir, ignore_errors=True)
 
     for package in packages:
-        print("Counting lines of ", package)
-
         try:
             homepage = get_package_information(package, "home_page")
         except:
             continue
+
+        print("Counting lines of ", package)
 
         cache_file = str("libraries/lines_of_code/" + package + ".js")
         html_file = str("loc/" + package + ".html")
