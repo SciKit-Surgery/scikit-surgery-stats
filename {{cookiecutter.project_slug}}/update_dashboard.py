@@ -135,23 +135,22 @@ if __name__ == "__main__":
                 "Total Weeks Up",
             )
 
-            # LAST UPDATE TODO
-            # last_release_badge = None
-            # last_release_target = None
-            # if last_update_date != "n/a":
-            #    last_release_badge = str(
-            #        "https://img.shields.io/badge/Last%20Release-"
-            #        + str(last_update_date).split("T")[0].replace("-", "%20")
-            #    )
-            #        + "-green?style=flat",
-            #    last_release_target = str(homepage + "/releases")
+            last_update_badge = None
+            last_update_target = None
+            if last_update_date != "n/a":
+                last_update_badge = str(
+                    "https://img.shields.io/badge/Last%20Commit-"
+                    + str(last_update_date).split("T")[0].replace("-", "%20")
+                    + "-green?style=flat",
+                )
+                last_update_target = str(homepage + "/commits/master")
 
-            # WriteCellWithLinkedImage(
-            #    fileout,
-            #    last_release_badge,
-            #    last_release_target,
-            #    "Last Release Date",
-            # )
+            WriteCellWithLinkedImage(
+                fileout,
+                last_update_badge,
+                last_update_target,
+                "Last Update",
+            )
 
             loc_badge = None
             loc_link = str("../loc/" + package + ".html")

@@ -8,6 +8,9 @@
       <th style="width:0.1">
         <p>Total Weeks Up</p>
       </th>
+      <th style="width:0.1">
+        <p>Latest Update</p>
+      </th>
       <th style="width:0.05">
         <p>Lines of Code</p>
       </th>
